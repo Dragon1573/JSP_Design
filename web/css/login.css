@@ -1,0 +1,69 @@
+/* 登陆页面的CSS外部样式表 */
+@charset "UTF-8";
+
+* {
+    margin: auto;
+    text-align: center;
+    align-items: center;
+}
+
+body {
+    background: url("../img/background.jpg") no-repeat;
+}
+
+header {
+    margin: 25px auto;
+}
+
+header > h1 {
+    font-family: "黑体";
+    font-weight: bolder;
+}
+
+form {
+    width: 25%;
+}
+
+input {
+    width: 100%;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    border: 1px solid #d1d5da;
+    border-radius: 5px;
+    text-align: left;
+}
+
+div.loginFrame {
+    margin: 25px auto;
+    padding: 25px;
+    border-width: 2px;
+    border-color: #d1d5da;
+    border-style: solid;
+    border-radius: 10px;
+    text-align: left;
+    background-color: cornsilk;
+}
+
+input#login {
+    border-radius: 10px;
+    background-color: #279f43;
+    font-weight: bolder;
+    font-size: large;
+    padding: 10px;
+    color: white;
+    text-align: center;
+}
+
+div.signUpFrame {
+    margin: 25px auto;
+    width: 25%;
+    border-width: 2px;
+    border-color: #d1d5da;
+    border-style: solid;
+    border-radius: 10px;
+    padding-top: 25px;
+    padding-bottom: 25px;
+    background-color: cornsilk;
+}

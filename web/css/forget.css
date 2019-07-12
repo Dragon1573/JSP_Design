@@ -1,0 +1,61 @@
+/* 密码找回页面的外联样式表 */
+@charset "UTF-8";
+
+* {
+    text-align: center;
+    margin: auto;
+}
+
+body {
+    background: url("../img/background.jpg");
+    padding: 10px 0;
+}
+
+header {
+    margin: 25px auto;
+}
+
+header > h1 {
+    font-family: "黑体", sans-serif;
+    font-weight: bolder;
+}
+
+.forgetFrame {
+    margin: auto auto;
+    width: 25%;
+    border-color: gray;
+    border-style: solid;
+    border-radius: 10px;
+    border-width: 1px;
+    padding: 25px 10px;
+    background-color: cornsilk;
+    text-align: left;
+}
+
+input {
+    width: 100%;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #d1d5da;
+    border-radius: 5px;
+    text-align: left;
+}
+
+.error {
+    color: red;
+    font-weight: bold;
+}
+
+button {
+    border-radius: 10px;
+    background-color: #279f43;
+    font-weight: bolder;
+    font-size: large;
+    padding: 10px;
+    color: white;
+    text-align: center;
+    width: 100%;
+}
+
