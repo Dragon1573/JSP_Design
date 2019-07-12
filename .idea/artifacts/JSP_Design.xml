@@ -1,0 +1,17 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="JSP_Design">
+    <output-path>$PROJECT_DIR$/out</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="JSP_Design/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="JSP_Design" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="application" name="Alibaba FastJSON" />
+          <element id="library" level="application" name="Microsoft JDBC for SQLServer 7.2" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>
