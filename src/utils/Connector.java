@@ -20,9 +20,7 @@ public class Connector implements Serializable {
     public Connector() {
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            this.connection = DriverManager.getConnection(
-                "jdbc:sqlserver://localhost:1433;DatabaseName=Local_Git;", "sa",
-                "123456");
+            this.connection = DriverManager.getConnection("jdbc:sqlserver://localhost:1433;DatabaseName=Local_Git;", "sa", "123456");
         } catch (ClassNotFoundException exception) {
             System.err.println("错误：驱动未找到！");
             exception.printStackTrace();
@@ -41,8 +39,7 @@ public class Connector implements Serializable {
     public ResultSet login(String username) {
         ResultSet resultSet = null;
         try {
-            PreparedStatement statement = connection.prepareStatement(
-                "SELECT [Password] FROM [dbo].[Users] WHERE ([Username] = ? OR [Phone] = ? OR [Email] = ?)");
+            PreparedStatement statement = connection.prepareStatement("SELECT [Password] FROM [dbo].[Users] WHERE ([Username] = ? OR [Phone] = ? OR [Email] = ?)");
             statement.setString(1, username);
             statement.setString(2, username);
             statement.setString(3, username);
@@ -62,8 +59,7 @@ public class Connector implements Serializable {
      */
     public ResultSet uniqueCheck(String username) {
         try {
-            PreparedStatement statement = this.connection.prepareStatement(
-                "SELECT COUNT(*) AS [Rows] FROM [dbo].[Users] WHERE [Username] = ?");
+            PreparedStatement statement = this.connection.prepareStatement("SELECT COUNT(*) AS [Rows] FROM [dbo].[Users] WHERE [Username] = ?");
             statement.setString(1, username);
             return statement.executeQuery();
         } catch (SQLException exception) {
@@ -81,13 +77,14 @@ public class Connector implements Serializable {
      */
     public int signUp(HashMap<String, String> profile) {
         try {
-            PreparedStatement statement = this.connection.prepareStatement(
-                "INSERT INTO [dbo].[Users] VALUES (?, ?, ?, ?, ?, ?)");
+            PreparedStatement statement = this.connection.prepareStatement("INSERT INTO [dbo].[Users] VALUES (?, ?, ?, ?, ?, ?)");
             statement.setString(1, profile.get("Username"));
             statement.setString(2, Md5Util.encrypt(profile.get("Password")));
 
-            // 用户信息缺失处理
-            // 将缺失信息填充为NULL
+            /*
+              用户信息缺失处理
+              将用户的空缺信息填充为 NULL
+             */
             if ("".equals(profile.get("Phone"))) {
                 statement.setNull(3, Types.CHAR);
             } else {
@@ -127,9 +124,7 @@ public class Connector implements Serializable {
         String question = null;
         try {
             // 执行SQL语句
-            PreparedStatement statement = connection.prepareStatement(
-                "SELECT [Question] FROM [dbo].[Users] WHERE [Username] = ?"
-            );
+            PreparedStatement statement = connection.prepareStatement("SELECT [Question] FROM [dbo].[Users] WHERE [Username] = ?");
             statement.setString(1, username);
             ResultSet resultSet = statement.executeQuery();
 
@@ -155,20 +150,58 @@ public class Connector implements Serializable {
         ResultSet resultSet = null;
         try {
             if (!anonymous.equals(username)) {
-                PreparedStatement statement = connection.prepareStatement(
-                    "SELECT * FROM [Comments] WHERE [Sender] = ?"
-                );
+                PreparedStatement statement = connection.prepareStatement("SELECT * FROM [Comments] WHERE [Sender] = ?");
                 statement.setString(1, username);
                 resultSet = statement.executeQuery();
             } else {
                 Statement statement = connection.createStatement();
-                resultSet = statement.executeQuery(
-                  "SELECT * FROM [Comments]"
-                );
+                resultSet = statement.executeQuery("SELECT * FROM [Comments]");
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return resultSet;
+    }
+
+    /**
+     * 密码重置身份认证
+     *
+     * @param username 用户名
+     * @param answer   密保答案
+     * @return 校验标记
+     */
+    public boolean resetVerify(String username, String answer) {
+        boolean isPassed = false;
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) AS [Flag] FROM [Users] WHERE [Username] = ? AND [Answer] = ?");
+            statement.setString(1, username);
+            statement.setString(2, answer);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet != null && resultSet.next()) {
+                isPassed = (resultSet.getInt("Flag") > 0);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return isPassed;
+    }
+
+    /**
+     * 密码重置
+     *
+     * @param password 密码
+     */
+    public void reset(String username, String password) {
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                "UPDATE [Users] SET [Password] = ? WHERE [Username] = ?"
+            );
+            statement.setString(1, Md5Util.encrypt(password));
+            statement.setString(2, username);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
