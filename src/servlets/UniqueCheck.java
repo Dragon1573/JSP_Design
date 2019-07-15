@@ -16,8 +16,10 @@ import com.alibaba.fastjson.JSON;
 import utils.Connector;
 
 /**
- * @Author: Dragon1573
- * @Date: 2019/7/8
+ * 用户名唯一性检验
+ *
+ * @author Dragon1573
+ * @date 2019/7/8
  */
 @WebServlet(name = "UniqueCheck", urlPatterns = {"/check"})
 public class UniqueCheck extends HttpServlet {

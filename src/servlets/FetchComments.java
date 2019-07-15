@@ -18,8 +18,10 @@ import com.alibaba.fastjson.JSONObject;
 import utils.Connector;
 
 /**
- * @Author: Dragon1573
- * @Date: 2019/7/11
+ * 获取评论
+ *
+ * @author Dragon1573
+ * @date 2019/7/11
  */
 @WebServlet(name = "FetchComments", urlPatterns = {"/fetch"})
 public class FetchComments extends HttpServlet {
@@ -73,5 +75,7 @@ public class FetchComments extends HttpServlet {
         // 得到对象类型为 com.alibaba.fastjson.JSONObject
         // 其形式与HashMap类似
         JSONObject object = JSON.parseObject(message);
+
+        // TODO 发送评论功能未完成
     }
 }

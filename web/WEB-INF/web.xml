@@ -1,32 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-        xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
-        id="WebApp_ID"
-        version="4.0">
-    <display-name>
-        JSP_Design
-    </display-name>
-    <welcome-file-list>
-        <welcome-file>
-            index.jsp
-        </welcome-file>
-    </welcome-file-list>
-    <error-page>
-        <error-code>
-            404
-        </error-code>
-        <location>
-            /error404.html
-        </location>
-    </error-page>
-    <error-page>
-        <error-code>
-            500
-        </error-code>
-        <location>
-            /error500.html
-        </location>
-    </error-page>
+
+<!-- 网页应用程序配置 -->
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd" id="WebApp_ID" version="4.0">
+  <!-- 项目显示名 -->
+  <display-name>JSP_Design</display-name>
+
+  <!-- 目录URL关联列表 -->
+  <welcome-file-list>
+    <!-- 目录主文件 -->
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+
+  <!-- 自定义错误页面 -->
+  <error-page>
+    <!-- 状态码 -->
+    <error-code>404</error-code>
+    <!-- 转发地址 -->
+    <location>/error404.html</location>
+  </error-page>
+  <error-page>
+    <error-code>500</error-code>
+    <location>/error500.html</location>
+  </error-page>
+
+  <!-- JSP配置 -->
+  <jsp-config>
+    <!-- JSP属性组 -->
+    <jsp-property-group>
+      <!-- URL匹配模式 -->
+      <url-pattern>*.html</url-pattern>
+      <!-- 是否忽略EL表达式支持 -->
+      <el-ignored>true</el-ignored>
+      <!-- 文件编码 -->
+      <page-encoding>UTF-8</page-encoding>
+      <!-- 是否禁用Java脚本 -->
+      <scripting-invalid>true</scripting-invalid>
+    </jsp-property-group>
+  </jsp-config>
 </web-app>
