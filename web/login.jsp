@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <jsp:useBean id="certificate" class="entities.UserInfo" scope="session">
 </jsp:useBean>
 <html>
@@ -17,18 +18,14 @@
   </header>
   <form name="form" method="post" action="login">
     <div class="loginFrame">
-      <label>用户名</label>
-      <input type="text" name="username" placeholder="用户名/手机号/邮箱地址" required="required" />
-      <label>密码</label>
+      <label for="username">用户名</label>
+      <input type="text" name="username" id="username" placeholder="用户名/手机号/邮箱地址" required="required" />
+      <label for="password">密码</label>
       <a style="float: right;" href="forget.jsp">忘记密码？</a>
-      <input type="password" name="password" required="required" />
-      <%
-        if (!certificate.isVerified()) {
-      %>
-      <div style="color: red; font-weight: bold;">登陆失败：用户名或密码错误！</div>
-      <%
-        }
-      %>
+      <input type="password" name="password" id="password" required="required" />
+      <c:if test="${!certificate.verified}">
+        <div style="color: red; font-weight: bold;">登陆失败：用户名或密码错误！</div>
+      </c:if>
       <input type="submit" id="login" value="登录" />
     </div>
   </form>

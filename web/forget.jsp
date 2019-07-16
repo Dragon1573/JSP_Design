@@ -7,6 +7,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <jsp:useBean id="certificate" class="entities.UserInfo" scope="session">
 </jsp:useBean>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 
 <head>
@@ -36,14 +37,10 @@
       <label id="question" hidden="hidden" for="answer"></label>
       <input type="text" name="answer" id="answer" hidden="hidden"
              required="required" />
-      <%
-        if (session.getAttribute("Error") != null && !(boolean)session.getAttribute("Error")) {
-      %>
-      <div class="error">密保回答错误！请重试……</div>
-      <%
-          session.removeAttribute("Error");
-        }
-      %>
+      <c:if test="${pageContext.session.getAttribute('Error') != null}">
+        <div class="error">密保回答错误！请重试……</div>
+        ${pageContext.session.removeAttribute("Error")}
+      </c:if>
 
       <button type="submit">找回</button>
     </div>

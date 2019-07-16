@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page isELIgnored="false" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <jsp:useBean id="certificate" class="entities.UserInfo" scope="session">
 </jsp:useBean>
 <html>
@@ -32,47 +34,48 @@
       </div>
       <div id="blank"></div>
       <div id="profile">
-        <%
-          if (certificate.isVerified() && !"Anonymous".equals(certificate.getUsername())) {
-        %>
-        <details>
-          <summary style="text-align: right;">
-            <jsp:getProperty name="certificate" property="username" />
-          </summary>
-          <div class="menu">
-            <div>
-              <label>当前身份：</label>
-              <p style="font-weight: bolder; font-size: 14pt;">
+        <c:choose>
+          <c:when test="${certificate.verified && !'Anonymous'.equals(certificate.username)}">
+            <details>
+              <summary style="text-align: right;">
                 <jsp:getProperty name="certificate" property="username" />
-              </p>
-            </div>
-            <div class="line"></div>
-            <div>
-              <div>
-                <a href="repositories.jsp?user=<%=certificate.getUsername()%>">
-                  你的仓库
-                </a>
+              </summary>
+              <div class="menu">
+                <div>
+                  <label>当前身份：</label>
+                  <p style="font-weight: bolder; font-size: 14pt;">
+                    <jsp:getProperty name="certificate" property="username" />
+                  </p>
+                </div>
+                <div class="line"></div>
+                <div>
+                  <div>
+                    <a href="repositories.jsp?user=${certificate.username}">
+                      你的仓库
+                    </a>
+                  </div>
+                  <div>
+                    <a href="comments.jsp?user=${certificate.username}">
+                      你的评论
+                    </a>
+                  </div>
+                  <div class="line"></div>
+                  <div>
+                    <a href="settings.jsp?user=${certificate.username}">
+                      用户设置
+                    </a>
+                  </div>
+                  <div>
+                    <a href="logout">退出账户</a>
+                  </div>
+                </div>
               </div>
-              <div>
-                <a href="comments.jsp?user=<%=certificate.getUsername()%>">
-                  你的评论
-                </a>
-              </div>
-              <div class="line"></div>
-              <div>
-                <a href="settings.jsp?user=<%=certificate.getUsername()%>">
-                  用户设置
-                </a>
-              </div>
-              <div>
-                <a href="logout">退出账户</a>
-              </div>
-            </div>
-          </div>
-        </details>
-        <%} else {%>
-        <a href="login.jsp">登录</a>
-        <%}%>
+            </details>
+          </c:when>
+          <c:otherwise>
+            <a href="login.jsp">登录</a>
+          </c:otherwise>
+        </c:choose>
       </div>
     </header>
     <div class="mainContent">
@@ -86,18 +89,19 @@
             <tbody id="comments"></tbody>
           </table>
         </div>
-        <%
-          if (certificate.isVerified() && !"Anonymous".equals(certificate.getUsername())) {
-        %>
-        <label for="sender">发表评论：</label>
-        <textarea id="sender" class="comments"></textarea>
-        <%
-          }
-        %>
+        <c:if test="${certificate.verified && !'Anonymous'.equals(certificate.username)}">
+          <div id="comments-div">
+            <label for="sender">发表评论：</label>
+            <textarea id="sender" class="comments"></textarea>
+            <button type="submit">发表</button>
+            <button type="reset">清空</button>
+          </div>
+        </c:if>
       </div>
     </div>
     <footer>
-      <div>Powered by
+      <div>
+        Powered by
         <a href="https://github.com/Dragon1573/">@Dragon1573</a>
       </div>
     </footer>
