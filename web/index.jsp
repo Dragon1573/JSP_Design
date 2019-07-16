@@ -11,7 +11,7 @@
   <link rel="stylesheet" type="text/css" href="css/index.css" />
   <link rel="shortcut icon" href="img/favicon.ico" type="image/canvasObject-icon" />
   <script type="text/javascript" src="js/jquery-3.4.1.js"></script>
-  <script type="text/javascript" src="js/fetchComments.js"></script>
+  <script type="text/javascript" src="js/index.js"></script>
   <%
     request.setCharacterEncoding("UTF-8");
     response.setCharacterEncoding("UTF-8");
@@ -32,7 +32,26 @@
           <img alt="佛山科学技术学院" src="img/fosu-logo.png" />
         </a>
       </div>
-      <div id="blank"></div>
+      <div id="blank">
+        <table id="navigator">
+          <tbody>
+            <tr>
+              <td>
+                <a href="index.jsp">首页</a>
+              </td>
+              <td>
+                <a href="repositories.jsp">仓库</a>
+              </td>
+              <td>
+                <a href="comments.jsp">评论</a>
+              </td>
+              <td>
+                <a href="https://github.com/Dragon1573/JSP_Design/">GitHub</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
       <div id="profile">
         <c:choose>
           <c:when test="${certificate.verified && !'Anonymous'.equals(certificate.username)}">
@@ -91,21 +110,23 @@
         </div>
         <c:if test="${certificate.verified && !'Anonymous'.equals(certificate.username)}">
           <div id="comments-div">
-            <label for="sender">发表评论：</label>
-            <textarea id="sender" class="comments"></textarea>
-            <button type="submit">发表</button>
-            <button type="reset">清空</button>
+            <form action="javascript:void(0)">
+              <label for="sender">发表评论：</label>
+              <textarea id="sender" class="comments"></textarea>
+              <button type="submit" onclick="sendComments('${certificate.username}');">发表</button>
+              <button type="reset">清空</button>
+            </form>
           </div>
         </c:if>
       </div>
     </div>
-    <footer>
-      <div>
-        Powered by
-        <a href="https://github.com/Dragon1573/">@Dragon1573</a>
-      </div>
-    </footer>
   </div>
+  <footer>
+    <div>
+      Powered by
+      <a href="https://github.com/Dragon1573/">@Dragon1573</a>
+    </div>
+  </footer>
 </body>
 
 </html>

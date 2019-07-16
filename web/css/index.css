@@ -8,12 +8,16 @@
 }
 
 html, body {
+    height: 100%;
     margin: auto;
 }
 
 .mainContainer {
     margin: auto;
     font-size: smaller;
+    min-height: 100%;
+    box-sizing: border-box;
+    padding-bottom: 44px;
 }
 
 .mainContent > .leftContainer {
@@ -55,14 +59,14 @@ label {
 textarea.comments {
     resize: vertical;
     text-align: left;
-    width: 100%;
+    width: 98%;
     height: 10em;
-    margin: 5px 0;
 }
 
 header {
     text-align: left;
     display: flex;
+    margin-bottom: 50px;
 }
 
 header > div {
@@ -75,6 +79,23 @@ header > div > a {
 
 div#blank {
     width: 50%;
+    text-align: left;
+}
+
+table#navigator {
+    width: auto;
+    margin: 0;
+    font-size: large;
+    font-family: "华文琥珀", "黑体", sans-serif;
+}
+
+table#navigator td {
+    width: 100px;
+}
+
+table#navigator a {
+    text-decoration: none;
+    color: black;
 }
 
 div#profile {
@@ -113,15 +134,17 @@ footer {
     background-color: black;
     color: white;
     position: relative;
-    bottom: -16px;
     width: 100%;
     clear: both;
     font-size: larger;
+    height: 44px;
+    margin-top: -44px;
 }
 
 footer div {
-    margin: 20px auto;
-    padding: 5px 0;
+    padding: 10px 0;
+    font-size: larger;
+    font-family: "华文琥珀", "微软雅黑", "黑体", serif;
 }
 
 footer a {

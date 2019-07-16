@@ -4,7 +4,7 @@
 // 刷新方法
 function fetchComments() {
     $.ajax({
-        url: "fetch?username=" + $("title#username")[0].text,
+        url: "sync?username=" + $("title#username")[0].text,
         type: "GET",
         dataType: "json",
 
@@ -42,22 +42,22 @@ $(function () {
 /**
  * 发送评论
  */
-function sendComments() {
+function sendComments(username) {
     // 获取评论内容
-    let contents = $("textarea#sender").text();
+    let content = $("textarea#sender").val();
 
-    if (contents === "") {
+    if (content === "" || username === "Anonymous") {
         alert("评论内容不能为空！");
         return;
     }
 
     // 通过jQuery Ajax向服务器发送评论
     $.ajax({
-        url: "save",
+        url: "sync",
         type: "POST",
         data: {
-            "user": $("title#username").val(),
-            "content": contents
+            "username": username,
+            "content": content
         },
 
         success: function () {
@@ -68,5 +68,5 @@ function sendComments() {
             alert("发送失败，请重试……");
             fetchComments();
         }
-    })
+    });
 }
