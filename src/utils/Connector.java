@@ -194,11 +194,26 @@ public class Connector implements Serializable {
      */
     public void reset(String username, String password) {
         try {
-            PreparedStatement statement = connection.prepareStatement(
-                "UPDATE [Users] SET [Password] = ? WHERE [Username] = ?"
-            );
+            PreparedStatement statement = connection.prepareStatement("UPDATE [Users] SET [Password] = ? WHERE [Username] = ?");
             statement.setString(1, Md5Util.encrypt(password));
             statement.setString(2, username);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 发送评论
+     *
+     * @param username 用户名
+     * @param comments 评论内容
+     */
+    public void sendComments(String username, String comments) {
+        try {
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO [Comments] VALUES (?, ?, SYSDATETIME())");
+            statement.setString(1, username);
+            statement.setString(2, comments);
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
