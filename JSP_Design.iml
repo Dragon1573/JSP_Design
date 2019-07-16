@@ -22,5 +22,6 @@
     <orderEntry type="library" scope="PROVIDED" name="Tomcat 9.0.21" level="application_server_libraries" />
     <orderEntry type="library" name="Alibaba FastJSON" level="application" />
     <orderEntry type="library" name="Microsoft JDBC for SQLServer 7.2" level="application" />
+    <orderEntry type="library" name="Apache Jakarta JSLT 1.1.2" level="application" />
   </component>
 </module>

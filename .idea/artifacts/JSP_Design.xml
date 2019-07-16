@@ -10,6 +10,7 @@
         <element id="directory" name="lib">
           <element id="library" level="application" name="Alibaba FastJSON" />
           <element id="library" level="application" name="Microsoft JDBC for SQLServer 7.2" />
+          <element id="library" level="application" name="Apache Jakarta JSLT 1.1.2" />
         </element>
       </element>
     </root>
