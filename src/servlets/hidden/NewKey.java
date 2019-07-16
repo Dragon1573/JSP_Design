@@ -1,8 +1,7 @@
-package servlets;
+package servlets.hidden;
 
 import java.io.IOException;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +18,7 @@ import utils.Connector;
 @WebServlet(name = "NewKey", urlPatterns = {"/reset"})
 public class NewKey extends HttpServlet {
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // 取出Session
         HttpSession session = request.getSession();
         UserInfo info = (UserInfo)session.getAttribute("certificate");
