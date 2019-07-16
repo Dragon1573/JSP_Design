@@ -32,7 +32,7 @@ public class ResetVerify extends HttpServlet {
             info.setVerified(true);
             info.setUsername(username);
             session.setAttribute("certificate", info);
-            response.sendRedirect("reset.jsp");
+            response.sendRedirect("private/reset.jsp");
         } else {
             session.setAttribute("Error", false);
             response.sendRedirect("forget.jsp");

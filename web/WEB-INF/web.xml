@@ -29,12 +29,8 @@
     <jsp-property-group>
       <!-- URL匹配模式 -->
       <url-pattern>*.html</url-pattern>
-      <!-- 是否忽略EL表达式支持 -->
-      <el-ignored>true</el-ignored>
       <!-- 文件编码 -->
       <page-encoding>UTF-8</page-encoding>
-      <!-- 是否禁用Java脚本 -->
-      <scripting-invalid>true</scripting-invalid>
     </jsp-property-group>
   </jsp-config>
 </web-app>

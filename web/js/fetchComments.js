@@ -43,5 +43,12 @@ $(function () {
  * 发送评论
  */
 function sendComments() {
-    let comments = $("")
 }
+
+/**
+ * 页尾固定
+ */
+$(function () {
+   let screen = document.body.clientHeight;
+
+});
