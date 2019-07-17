@@ -100,6 +100,11 @@
     <div class="mainContent">
       <div class="leftContainer">
         <h1>仓库列表</h1>
+        <div class="comments">
+          <table>
+            <tbody id="repositories"></tbody>
+          </table>
+        </div>
       </div>
       <div class="rightContainer">
         <h1>评论区</h1>
@@ -114,7 +119,7 @@
               <label for="sender">发表评论：</label>
               <textarea id="sender" class="comments"></textarea>
               <button type="submit" onclick="sendComments('${certificate.username}');">发表</button>
-              <button type="reset">清空</button>
+              <button type="reset" id="reset">清空</button>
             </form>
           </div>
         </c:if>

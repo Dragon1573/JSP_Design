@@ -208,15 +208,47 @@ public class Connector implements Serializable {
      *
      * @param username 用户名
      * @param comments 评论内容
+     * @return boolean
      */
-    public void sendComments(String username, String comments) {
+    public boolean sendComments(String username, String comments) {
+        // 数据存入标记
+        boolean isSaved = false;
         try {
             PreparedStatement statement = connection.prepareStatement("INSERT INTO [Comments] VALUES (?, ?, SYSDATETIME())");
             statement.setString(1, username);
             statement.setString(2, comments);
-            statement.executeUpdate();
+            isSaved = (statement.executeUpdate() > 0);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return isSaved;
+    }
+
+    /**
+     * 检索用户仓库
+     *
+     * @param username 用户名
+     * @return 结果集
+     */
+    public ResultSet fetchRepositories(String username) {
+        final String anonymous = "佛大云服务";
+        ResultSet resultSet = null;
+        PreparedStatement statement;
+
+        try {
+            if (anonymous.equals(username)) {
+                // 匿名用户
+                statement = connection.prepareStatement("SELECT [Username],[Repository] FROM [Repositories] GROUP BY [Username], [Repository]");
+                resultSet = statement.executeQuery();
+            } else {
+                // 登录用户
+                statement = connection.prepareStatement("SELECT [Username], [Repository] FROM [Repositories] WHERE [Username] = ? GROUP BY [Username], [Repository]");
+                statement.setString(1, username);
+                resultSet = statement.executeQuery();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return resultSet;
     }
 }

@@ -1,7 +1,6 @@
 /**
  * 刷新评论
  */
-// 刷新方法
 function fetchComments() {
     $.ajax({
         url: "sync?username=" + $("title#username")[0].text,
@@ -10,8 +9,11 @@ function fetchComments() {
 
         success: function (response) {
             let context = "";
+
             // 将返回值转换为JSON数组
             let array = eval(response);
+
+            // 遍历数组元素
             $.each(array, function (k) {
                 context += "<tr><td class='left'>" + array[k]["SENDER"] + "：";
                 if (array[k]["DETAILS"].length > 30) {
@@ -21,6 +23,14 @@ function fetchComments() {
                 }
                 context += "</td><td style='float: right;'>" + array[k]["DATETIME"] + "</td></tr>";
             });
+
+            // 空评论过滤
+            if (context === "") {
+                context = "<tr><td colspan='3' style='font-size: large'>" +
+                    "【系统消息】未获取到任何评论！" +
+                    "</td></tr>";
+            }
+
             $("tbody#comments").html(context);
         },
 
@@ -29,15 +39,6 @@ function fetchComments() {
         }
     })
 }
-
-/**
- * jQuery Ajax实现无刷新实时评论
- */
-$(function () {
-    fetchComments();
-    // 每秒刷新一次评论区
-    setInterval(fetchComments, 15000);
-});
 
 /**
  * 发送评论
@@ -55,14 +56,16 @@ function sendComments(username) {
     $.ajax({
         url: "sync",
         type: "POST",
+        dataType: "json",
         data: {
             "username": username,
             "content": content
         },
 
-        success: function () {
-            alert("发送成功！");
+        success: function (response) {
+            alert((response["FLAG"] === true) ? "发送成功！" : "发送失败！");
             fetchComments();
+            $("button#reset").click();
         },
         error: function () {
             alert("发送失败，请重试……");
@@ -70,3 +73,48 @@ function sendComments(username) {
         }
     });
 }
+
+/**
+ * 刷新仓库列表
+ */
+function fetchRepositories() {
+    $.ajax({
+        url: "repositories",
+        type: "GET",
+        dataType: "json",
+        data: {
+            "username": $("title#username")[0].text
+        },
+
+        success: function (response) {
+            let context = "";
+
+            let json = eval(response);
+
+            $.each(json, function (k) {
+                context += "<tr><td style='font-size: larger'>" + json[k]["USERNAME"] + "/" + json[k]["REPOSITORY"] + "</td></tr>";
+            });
+
+            if (context === "") {
+                context = "<tr><td style='font-size: large'>【系统消息】未找到任何仓库！</td></tr>";
+            }
+            $("tbody#repositories").html(context);
+        },
+
+        error: function () {
+            alert("错误：服务器连接失败！");
+        }
+    });
+}
+
+
+/**
+ * jQuery Ajax实时刷新
+ */
+$(function () {
+    // 页面加载时首次刷新
+    fetchComments();
+    fetchRepositories();
+    // 每15秒刷新一次评论区
+    setInterval(fetchComments, 15000);
+});
