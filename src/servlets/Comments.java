@@ -2,11 +2,9 @@ package servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.HashMap;
 import java.util.Vector;
 
 import javax.servlet.annotation.WebServlet;
@@ -48,19 +46,19 @@ public class Comments extends HttpServlet {
         ResultSet resultSet = connector.fetchComments(username);
 
         // 生成JSON数据表
-        Vector<HashMap> vector = new Vector<>();
+        Vector<JSONObject> vector = new Vector<>();
         try {
             while (resultSet != null && resultSet.next()) {
-                HashMap<String, Object> jsonMap = new HashMap<>(3);
-                jsonMap.put("SENDER", resultSet.getString("Sender"));
-                jsonMap.put("DETAILS", resultSet.getString("Details"));
+                JSONObject object = new JSONObject();
+                object.put("SENDER", resultSet.getString("Sender"));
+                object.put("DETAILS", resultSet.getString("Details"));
 
                 // 将SQL Server中的时间转换为字符串
                 Timestamp timestamp = resultSet.getTimestamp("DateTime");
-                jsonMap.put("DATETIME", timestamp);
+                object.put("DATETIME", timestamp);
 
                 // 将单个JSON数据加入表中
-                vector.add(jsonMap);
+                vector.add(object);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -92,6 +90,16 @@ public class Comments extends HttpServlet {
 
         // 访问数据库
         Connector connector = new Connector();
-        connector.sendComments(username, comments);
+        boolean isSaved = connector.sendComments(username, comments);
+
+        // 转换为JSON字符串
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("FLAG", isSaved);
+        String jsonStr = JSON.toJSONString(jsonObject);
+
+        // 输出
+        PrintWriter out = response.getWriter();
+        out.println(jsonStr);
+        out.close();
     }
 }
