@@ -3,7 +3,10 @@ package filters;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.servlet.*;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,8 +33,9 @@ public class Authenticate implements javax.servlet.Filter {
         response.setContentType("text/html; charset=UTF-8");
 
         // 进行过滤
+        final String anonymous = "Anonymous";
         UserInfo info = (UserInfo)session.getAttribute("certificate");
-        if (info == null || "Anonymous".equals(info.getUsername()) || !info.isVerified()) {
+        if (info == null || anonymous.equals(info.getUsername()) || !info.isVerified()) {
             PrintWriter out = response.getWriter();
             out.println("<h1 style='text-align: center'>非法访问！正在返回主页</h1>");
 

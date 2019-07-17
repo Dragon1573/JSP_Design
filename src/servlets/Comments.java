@@ -27,7 +27,7 @@ public class Comments extends HttpServlet {
     /**
      * 获取评论
      *
-     * @param request 用户请求
+     * @param request  用户请求
      * @param response 服务器响应
      * @throws IOException I/O异常
      */
@@ -74,7 +74,7 @@ public class Comments extends HttpServlet {
     /**
      * 发送评论
      *
-     * @param request 用户请求
+     * @param request  用户请求
      * @param response 服务器响应
      * @throws IOException I/O异常
      */

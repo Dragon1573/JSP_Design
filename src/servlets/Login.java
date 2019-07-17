@@ -1,18 +1,19 @@
 package servlets;
 
-import entities.UserInfo;
-import utils.Connector;
-import utils.Md5Util;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+
+import entities.UserInfo;
+import utils.Connector;
+import utils.Md5Util;
 
 /**
  * Servlet：用户登录
@@ -60,19 +61,19 @@ public class Login extends HttpServlet {
         }
 
         // 判断是否登陆成功
-        String redirectURL;
+        String redirectUrl;
         if (success) {
             certificate.setUsername(username);
             certificate.setVerified(true);
-            redirectURL = "index.jsp?user=" + certificate.getUsername();
+            redirectUrl = "index.jsp?user=" + certificate.getUsername();
         } else {
             certificate.setUsername("Anonymous");
             certificate.setVerified(false);
-            redirectURL = "login.jsp";
+            redirectUrl = "login.jsp";
         }
 
         // 覆盖Session中的JavaBean
         session.setAttribute("certificate", certificate);
-        response.sendRedirect(redirectURL);
+        response.sendRedirect(redirectUrl);
     }
 }

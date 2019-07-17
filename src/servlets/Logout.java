@@ -1,25 +1,25 @@
 package servlets;
 
-import entities.UserInfo;
+import java.io.IOException;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
+
+import entities.UserInfo;
 
 /**
  * Servlet：用户退出
  *
- * @Author: Dragon1573
- * @Date: 2019/7/7
+ * @author Dragon1573
+ * @author 2019/7/7
  */
 @WebServlet(name = "Logout", urlPatterns = {"/logout"})
 public class Logout extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest request,
-        HttpServletResponse response) throws IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // 获取Session与JavaBean
         HttpSession session = request.getSession();
         UserInfo certificate = (UserInfo)session.getAttribute("certificate");

@@ -25,21 +25,6 @@ import utils.Connector;
 public class UniqueCheck extends HttpServlet {
     private static final long serialVersionUID = -5094519874151185796L;
 
-    private enum Info {
-        /**
-         * 用户唯一
-         */
-        UNIQUE,
-        /**
-         * 未设置密保
-         */
-        NO_PROTECTION,
-        /**
-         * 重复的用户
-         */
-        DUPLICATE
-    }
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // 设置编码格式
@@ -95,5 +80,20 @@ public class UniqueCheck extends HttpServlet {
         PrintWriter out = response.getWriter();
         out.println(jsonString);
         out.close();
+    }
+
+    private enum Info {
+        /**
+         * 用户唯一
+         */
+        UNIQUE,
+        /**
+         * 未设置密保
+         */
+        NO_PROTECTION,
+        /**
+         * 重复的用户
+         */
+        DUPLICATE
     }
 }

@@ -1,16 +1,17 @@
 package servlets;
 
-import entities.UserInfo;
-import utils.Connector;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.HashMap;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.HashMap;
+
+import entities.UserInfo;
+import utils.Connector;
 
 /**
  * Servlet：注册
@@ -23,15 +24,13 @@ public class SignUp extends HttpServlet {
     private static final long serialVersionUID = 735339428785258397L;
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         PrintWriter out = response.getWriter();
         out.println("警告：此方法仅用于Visio生成网站图，请使用POST方法！");
     }
 
     @Override
-    protected void doPost(HttpServletRequest request,
-        HttpServletResponse response) throws IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // 设置请求编码格式
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
