@@ -10,18 +10,15 @@ function fetchComments() {
         success: function (response) {
             let context = "";
 
-            // 将返回值转换为JSON数组
-            let array = eval(response);
-
             // 遍历数组元素
-            $.each(array, function (k) {
-                context += "<tr><td class='left'>" + array[k]["SENDER"] + "：";
-                if (array[k]["DETAILS"].length > 30) {
-                    context += array[k]["DETAILS"].substr(0, 30) + "……";
+            $.each(response, function (k) {
+                context += "<tr><td class='left'>" + response[k]["SENDER"] + "：";
+                if (response[k]["DETAILS"].length > 30) {
+                    context += response[k]["DETAILS"].substr(0, 30) + "……";
                 } else {
-                    context += array[k]["DETAILS"];
+                    context += response[k]["DETAILS"];
                 }
-                context += "</td><td style='float: right;'>" + array[k]["DATETIME"] + "</td></tr>";
+                context += "</td><td style='float: right;'>" + response[k]["DATETIME"] + "</td></tr>";
             });
 
             // 空评论过滤
@@ -89,10 +86,8 @@ function fetchRepositories() {
         success: function (response) {
             let context = "";
 
-            let json = eval(response);
-
-            $.each(json, function (k) {
-                context += "<tr><td style='font-size: larger'>" + json[k]["USERNAME"] + "/" + json[k]["REPOSITORY"] + "</td></tr>";
+            $.each(response, function (k) {
+                context += "<tr><td style='font-size: larger'>" + response[k]["USERNAME"] + "/" + response[k]["REPOSITORY"] + "</td></tr>";
             });
 
             if (context === "") {

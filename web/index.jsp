@@ -30,7 +30,7 @@
   <div class="mainContainer">
     <header>
       <div id="logo">
-        <a href="index.jsp">
+        <a href="http://web.fosu.edu.cn/">
           <img alt="佛山科学技术学院" src="img/fosu-logo.png" />
         </a>
       </div>
@@ -82,7 +82,7 @@
                   </div>
                   <div class="line"></div>
                   <div>
-                    <a href="private/settings.jsp?user=${certificate.username}">
+                    <a href="private/settings.jsp">
                       用户设置
                     </a>
                   </div>
