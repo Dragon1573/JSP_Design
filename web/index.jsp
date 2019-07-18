@@ -15,13 +15,15 @@
   <%
     request.setCharacterEncoding("UTF-8");
     response.setCharacterEncoding("UTF-8");
-
-    if (request.getParameter("user") == null) {
-      out.print("<title id='username'>佛大云服务</title>");
-    } else {
-      out.print("<title id='username'>" + request.getParameter("user") + "</title>");
-    }
   %>
+  <c:choose>
+    <c:when test="${param.user eq null}">
+      <title id="username">佛大云服务</title>
+    </c:when>
+    <c:otherwise>
+      <title id="username">${param.user}</title>
+    </c:otherwise>
+  </c:choose>
 </head>
 
 <body>
@@ -80,7 +82,7 @@
                   </div>
                   <div class="line"></div>
                   <div>
-                    <a href="settings.jsp?user=${certificate.username}">
+                    <a href="private/settings.jsp?user=${certificate.username}">
                       用户设置
                     </a>
                   </div>
