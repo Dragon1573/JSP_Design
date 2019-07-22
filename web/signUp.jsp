@@ -10,7 +10,7 @@
   <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" />
   <title>新用户注册</title>
   <script type="text/javascript" src="js/jquery-3.4.1.js"></script>
-  <script type="text/javascript" src="js/signUpQuery.js"></script>
+  <script type="text/javascript" src="js/platform.js"></script>
 </head>
 
 <body>

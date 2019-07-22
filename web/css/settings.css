@@ -1,0 +1,199 @@
+@charset "UTF-8";
+
+/**
+ * 用户设置页外联样式表
+ *
+ * @author Dragon1573
+ * @date 2019/7/18
+ */
+
+* {
+    margin: auto;
+    text-align: center;
+    align-self: center;
+}
+
+html, body {
+    height: 100%;
+}
+
+header {
+    text-align: left;
+    display: flex;
+    margin-bottom: 50px;
+}
+
+header > div {
+    color: black;
+}
+
+div#blank {
+    width: 50%;
+}
+
+table#navigator {
+    width: auto;
+    margin: 0;
+    font-size: large;
+    font-family: "华文琥珀", "黑体", sans-serif;
+}
+
+table#navigator td {
+    width: 100px;
+}
+
+table#navigator a {
+    text-decoration: none;
+    color: black;
+}
+
+div#profile {
+    float: right;
+}
+
+details {
+    font-family: "黑体", sans-serif;
+}
+
+.menu {
+    border: 1px solid gray;
+    border-radius: 10px;
+    display: block;
+    padding: 10px;
+    background-clip: padding-box;
+    box-shadow: 0 5px 15px rgba(27, 31, 35, 0.15);
+    position: absolute;
+    left: auto;
+    right: 10px;
+    background-color: white;
+}
+
+.menu *, .body * {
+    text-align: left;
+}
+
+.line {
+    border-top: 1px solid gray;
+    display: block;
+    height: 0;
+    margin: 10px 0;
+}
+
+.mainContainer {
+    font-size: smaller;
+    min-height: 100%;
+    box-sizing: border-box;
+    padding-bottom: 44px;
+}
+
+.body {
+    width: 80%;
+}
+
+.left {
+    width: 23%;
+    text-align: left;
+    border: 1px solid gray;
+    border-radius: 5px;
+    list-style: none;
+    padding: 1px;
+    display: block;
+    margin: 0 0 30px 0;
+    float: left;
+}
+
+.label {
+    background-color: #f3f5f8;
+    border-bottom: 1px solid #e1e4e8;
+    display: block;
+    padding: 10px 20px;
+}
+
+.item {
+    width: 100%;
+    display: block;
+    font-size: 14px;
+    padding: 5px 20px;
+    box-sizing: border-box;
+    text-decoration: none;
+}
+
+.selected {
+    background-color: aqua;
+    font-weight: bold;
+}
+
+.right {
+    width: 73%;
+    display: block;
+    float: right;
+    margin: 0 0 30px 0;
+}
+
+.subTitle {
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e1e4e8;
+}
+
+.text {
+    margin: 10px 0;
+}
+
+span.warning {
+    color: red;
+    font-weight: bold;
+}
+
+button {
+    font-size: larger;
+    font-weight: bolder;
+    padding: 5px 10px;
+}
+
+form {
+    margin: 25px 0;
+}
+
+dl {
+    margin: 10px 0;
+}
+
+dt {
+    margin: 5px 0;
+}
+
+input {
+    width: 400px;
+    height: 1.5em;
+}
+
+table.list, tbody.list {
+    width: 100%;
+}
+
+footer {
+    background-color: black;
+    color: white;
+    position: relative;
+    width: 100%;
+    clear: both;
+    font-size: larger;
+    height: 44px;
+    margin-top: -44px;
+}
+
+footer div {
+    padding: 10px 0;
+    font-size: larger;
+    font-family: "华文琥珀", "微软雅黑", "黑体", serif;
+}
+
+footer a {
+    color: white;
+    text-decoration: none;
+}
+
+footer a:hover {
+    color: white;
+    text-decoration: none;
+}

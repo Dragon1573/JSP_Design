@@ -11,19 +11,25 @@
   <link rel="stylesheet" type="text/css" href="css/index.css" />
   <link rel="shortcut icon" href="img/favicon.ico" type="image/canvasObject-icon" />
   <script type="text/javascript" src="js/jquery-3.4.1.js"></script>
-  <script type="text/javascript" src="js/index.js"></script>
+  <script type="text/javascript" src="js/platform.js"></script>
+  <script type="text/javascript">
+      $(function () {
+          // 页面加载时首次刷新
+          fetchComments();
+          fetchRepositories();
+          // 每15秒刷新一次评论区
+          setInterval(fetchComments, 15000);
+      });
+  </script>
   <%
     request.setCharacterEncoding("UTF-8");
     response.setCharacterEncoding("UTF-8");
   %>
-  <c:choose>
-    <c:when test="${param.user eq null}">
-      <title id="username">佛大云服务</title>
-    </c:when>
-    <c:otherwise>
-      <title id="username">${param.user}</title>
-    </c:otherwise>
-  </c:choose>
+  <c:choose> <c:when test="${param.user eq null}">
+    <title id="username">佛大云服务</title>
+  </c:when> <c:otherwise>
+    <title id="username">${param.user}</title>
+  </c:otherwise> </c:choose>
 </head>
 
 <body>
@@ -55,48 +61,45 @@
         </table>
       </div>
       <div id="profile">
-        <c:choose>
-          <c:when test="${certificate.verified && !'Anonymous'.equals(certificate.username)}">
-            <details>
-              <summary style="text-align: right;">
-                <jsp:getProperty name="certificate" property="username" />
-              </summary>
-              <div class="menu">
+        <c:choose> <c:when test="${certificate.verified && !'Anonymous'.equals(certificate.username)}">
+          <details>
+            <summary style="text-align: right;">
+              <jsp:getProperty name="certificate" property="username" />
+            </summary>
+            <div class="menu">
+              <div>
+                <label>当前身份：</label>
+                <p style="font-weight: bolder; font-size: 14pt;">
+                  <jsp:getProperty name="certificate" property="username" />
+                </p>
+              </div>
+              <div class="line"></div>
+              <div>
                 <div>
-                  <label>当前身份：</label>
-                  <p style="font-weight: bolder; font-size: 14pt;">
-                    <jsp:getProperty name="certificate" property="username" />
-                  </p>
+                  <a href="repositories.jsp?user=${certificate.username}">
+                    你的仓库
+                  </a>
+                </div>
+                <div>
+                  <a href="comments.jsp?user=${certificate.username}">
+                    你的评论
+                  </a>
                 </div>
                 <div class="line"></div>
                 <div>
-                  <div>
-                    <a href="repositories.jsp?user=${certificate.username}">
-                      你的仓库
-                    </a>
-                  </div>
-                  <div>
-                    <a href="comments.jsp?user=${certificate.username}">
-                      你的评论
-                    </a>
-                  </div>
-                  <div class="line"></div>
-                  <div>
-                    <a href="private/settings.jsp">
-                      用户设置
-                    </a>
-                  </div>
-                  <div>
-                    <a href="logout">退出账户</a>
-                  </div>
+                  <a href="private/account.jsp">
+                    用户设置
+                  </a>
+                </div>
+                <div>
+                  <a href="logout">退出账户</a>
                 </div>
               </div>
-            </details>
-          </c:when>
-          <c:otherwise>
-            <a href="login.jsp">登录</a>
-          </c:otherwise>
-        </c:choose>
+            </div>
+          </details>
+        </c:when> <c:otherwise>
+          <a href="login.jsp">登录</a>
+        </c:otherwise> </c:choose>
       </div>
     </header>
     <div class="mainContent">

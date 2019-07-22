@@ -67,8 +67,38 @@
     </p>
   </div>
   <canvas></canvas>
-  <script src="${path}/js/error.js" type="text/javascript"></script>
   <canvas id="christmasCanvas"></canvas>
+  <script src="${path}/js/platform.js" type="text/javascript"></script>
+  <script type="text/javascript">
+      document.addEventListener(
+          "touchmove",
+          function (e) {
+              // 不执行默认方法
+              e.preventDefault();
+          }
+      );
+
+
+      let canvas = $("canvas")[0];
+      let canvasObject = canvas.getContext('2d');
+      let zoomRatio = window.devicePixelRatio || 1;
+      let width = window.innerWidth;
+      let height = window.innerHeight;
+      let f = 90;
+      let q;
+      let u = Math.PI * 2;
+
+      canvas.width = width * zoomRatio;
+      canvas.height = height * zoomRatio;
+      canvasObject.scale(zoomRatio, zoomRatio);
+      canvasObject.globalAlpha = 0.6;
+
+      document.onclick = drawCanvas;
+      document.ontouchstart = drawCanvas;
+      drawCanvas();
+
+      snow();
+  </script>
 </body>
 
 </html>

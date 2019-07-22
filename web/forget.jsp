@@ -18,7 +18,7 @@
 
   <!-- 引入最新版的jQuery -->
   <script type="text/javascript" src="js/jquery-3.4.1.js"></script>
-  <script type="text/javascript" src="js/forgetQuery.js"></script>
+  <script type="text/javascript" src="js/platform.js"></script>
 </head>
 
 <body>
