@@ -50,6 +50,10 @@ public class Settings extends HttpServlet {
                 success = connector.changePassword(username, newPass, oldPass);
                 break;
 
+            case "Phone":
+                success = connector.changePhone(username, news);
+                break;
+
             default:
                 break;
         }

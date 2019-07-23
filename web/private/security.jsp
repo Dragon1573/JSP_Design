@@ -143,10 +143,11 @@
               <label for="new_phone">新手机号</label>
             </dt>
             <dd>
-              <input id="new_phone" required="required" type="tel" />
+              <input id="field" name="old_phone" type="hidden" value="" />
+              <input id="new_phone" name="new_phone" required="required" type="tel" />
             </dd>
           </dl>
-          <button type="submit">提交</button>
+          <button type="button" onclick="updateProfile('Phone', new_phone, old_phone)">提交</button>
         </form>
         <h1 class="subTitle">修改密保</h1>
         <form id="change_protection" accept-charset="UTF-8" method="post">

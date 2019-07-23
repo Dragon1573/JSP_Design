@@ -293,4 +293,24 @@ public class Connector implements Serializable {
         }
         return success;
     }
+
+    /**
+     * 修改联系方式
+     *
+     * @param username 用户名
+     * @param news     新联系方式
+     * @return 修改成功
+     */
+    public boolean changePhone(String username, String news) {
+        boolean success = false;
+        try {
+            PreparedStatement statement = connection.prepareStatement("UPDATE [Users] SET [Phone] = ? WHERE [Username] = ?");
+            statement.setString(1, news);
+            statement.setString(2, username);
+            success = (statement.executeUpdate() > 0);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return success;
+    }
 }
