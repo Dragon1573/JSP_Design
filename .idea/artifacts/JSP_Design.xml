@@ -1,8 +1,7 @@
 <component name="ArtifactManager">
-  <artifact type="exploded-war" name="JSP_Design">
+  <artifact type="exploded-war" build-on-make="true" name="JSP_Design">
     <output-path>$PROJECT_DIR$/out</output-path>
     <root id="root">
-      <element id="javaee-facet-resources" facet="JSP_Design/web/Web" />
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
           <element id="module-output" name="JSP_Design" />
@@ -13,6 +12,7 @@
           <element id="library" level="application" name="Apache Jakarta JSLT 1.1.2" />
         </element>
       </element>
+      <element id="javaee-facet-resources" facet="JSP_Design/web/Web" />
     </root>
   </artifact>
 </component>

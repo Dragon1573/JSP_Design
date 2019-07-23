@@ -124,7 +124,7 @@
               </p>
             </dd>
           </dl>
-          <button type="button" onclick="updateProfile('Username', new_profilex``)">提交</button>
+          <button type="button" onclick="updateProfile('Username', new_profile)">提交</button>
         </form>
         <button type="button" id="accept_warning" onclick="acceptWarning();">仍要修改</button>
       </div>

@@ -251,4 +251,24 @@ public class Connector implements Serializable {
         }
         return resultSet;
     }
+
+    /**
+     * 修改用户名
+     *
+     * @param news 新用户名
+     * @param old  旧用户名
+     * @return 修改成功
+     */
+    public boolean changeUsername(String news, String old) {
+        boolean success = false;
+        try {
+            PreparedStatement statement = connection.prepareStatement("UPDATE [Users] SET [Username] = ? WHERE [Username] = ?");
+            statement.setString(1, news);
+            statement.setString(2, old);
+            success = (statement.executeUpdate() > 0);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return success;
+    }
 }

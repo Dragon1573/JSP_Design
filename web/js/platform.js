@@ -125,7 +125,8 @@ function y(p) {
 
 /**
  * 对用户进行检查
- * @param username
+ *
+ * @param username 用户名
  */
 function checkUser(username) {
     // 设置ajax
@@ -214,6 +215,8 @@ function fetchComments() {
 
 /**
  * 发送评论
+ *
+ * @param username 用户名
  */
 function sendComments(username) {
     // 获取评论内容
@@ -279,6 +282,7 @@ function fetchRepositories() {
 
 /**
  * 使用jQuery实现Ajax局部刷新
+ *
  * @param username 用户名
  */
 function uniqueCheck(username) {
@@ -306,6 +310,9 @@ function uniqueCheck(username) {
 
 /**
  * 密码匹配校验
+ *
+ * @param password 密码
+ * @param confirm 确认密码
  */
 function confirmCheck(password, confirm) {
     /**
@@ -323,6 +330,12 @@ function confirmCheck(password, confirm) {
     }
 }
 
+/**
+ * 更新用户信息
+ *
+ * @param fields 信息字段
+ * @param newProfile 新数据
+ */
 function updateProfile(fields, newProfile) {
     $.ajax({
         url: "/JSP_Design/settings",
@@ -336,6 +349,7 @@ function updateProfile(fields, newProfile) {
         success: function (response) {
             if (response["SUCCESS"]) {
                 alert("信息更新成功！");
+                window.location.reload();
             } else {
                 alert("错误：信息更新失败，请重试！");
             }
