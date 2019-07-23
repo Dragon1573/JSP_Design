@@ -58,6 +58,10 @@ public class Settings extends HttpServlet {
                 success = connector.changeProtection(username, news, old);
                 break;
 
+            case "Email":
+                success = connector.changeEmail(username, news);
+                break;
+
             default:
                 break;
         }

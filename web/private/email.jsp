@@ -17,6 +17,8 @@
   <meta charset="UTF-8">
   <link rel="stylesheet" href="../css/settings.css" />
   <link rel="icon" href="../img/favicon.ico" />
+  <script type="text/javascript" src="${path}/js/jquery-3.4.1.js"></script>
+  <script type="text/javascript" src="${path}/js/platform.js"></script>
   <title>用户设置</title>
 </head>
 
@@ -108,10 +110,11 @@
               <label for="new_email">新电子邮箱</label>
             </dt>
             <dd>
-              <input type="email" id="new_email" />
+              <input type="email" id="new_email" name="new_email" />
+              <input type="hidden" id="old_email" name="old_email" value="" />
             </dd>
           </dl>
-          <button type="submit">提交</button>
+          <button type="button" onclick="updateProfile('Email', new_email, old_email);">提交</button>
         </form>
       </div>
     </div>

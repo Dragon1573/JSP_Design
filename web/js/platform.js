@@ -343,8 +343,8 @@ function updateProfile(fields, newProfile, oldProfile) {
         method: "POST",
         data: {
             "fields": fields,
-            "old": oldProfile.value,
             "news": newProfile.value,
+            "old": oldProfile.value,
         },
         dataType: "json",
 

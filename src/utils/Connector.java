@@ -335,4 +335,24 @@ public class Connector implements Serializable {
         }
         return success;
     }
+
+    /**
+     * 修改电子邮箱
+     *
+     * @param username 用户名
+     * @param mail     电子邮箱
+     * @return 修改成功
+     */
+    public boolean changeEmail(String username, String mail) {
+        boolean success = false;
+        try {
+            PreparedStatement statement = connection.prepareStatement("UPDATE [Users] SET [Email] = ? WHERE [Username] = ?");
+            statement.setString(1, mail);
+            statement.setString(2, username);
+            success = (statement.executeUpdate() > 0);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return success;
+    }
 }
