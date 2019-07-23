@@ -335,13 +335,15 @@ function confirmCheck(password, confirm) {
  *
  * @param fields 信息字段
  * @param newProfile 新数据
+ * @param oldProfile 旧数据
  */
-function updateProfile(fields, newProfile) {
+function updateProfile(fields, newProfile, oldProfile) {
     $.ajax({
         url: "/JSP_Design/settings",
         method: "POST",
         data: {
             "fields": fields,
+            "old": oldProfile.value,
             "news": newProfile.value,
         },
         dataType: "json",

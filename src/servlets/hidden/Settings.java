@@ -12,6 +12,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import entities.UserInfo;
 import utils.Connector;
+import utils.Md5Util;
 
 /**
  * @author Dragon1573
@@ -30,18 +31,28 @@ public class Settings extends HttpServlet {
         // 获取表单数据
         String fields = request.getParameter("fields");
         String news = request.getParameter("news");
+        String old = request.getParameter("old");
         UserInfo info = (UserInfo)session.getAttribute("certificate");
-        String old = info.getUsername();
+        String username = info.getUsername();
 
         // 变更数据库
         Connector connector = new Connector();
         boolean success = false;
-        if ("Username".equals(fields)) {
-            success = connector.changeUsername(news, old);
-        }
+        switch (fields) {
+            case "Username":
+                success = connector.changeUsername(news, username);
+                info.setUsername(news);
+                break;
 
-        // 变更Session信息
-        info.setUsername(news);
+            case "Password":
+                String newPass = Md5Util.encrypt(news);
+                String oldPass = Md5Util.encrypt(old);
+                success = connector.changePassword(username, newPass, oldPass);
+                break;
+
+            default:
+                break;
+        }
 
         // 生成JSON数据集并输出
         JSONObject object = new JSONObject();

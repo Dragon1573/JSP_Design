@@ -271,4 +271,26 @@ public class Connector implements Serializable {
         }
         return success;
     }
+
+    /**
+     * 修改用户密码
+     *
+     * @param username 用户名
+     * @param news     新密码（MD5）
+     * @param old      旧密码（MD5）
+     * @return 修改成功
+     */
+    public boolean changePassword(String username, String news, String old) {
+        boolean success = false;
+        try {
+            PreparedStatement statement = connection.prepareStatement("UPDATE [Users] SET [Password] = ? WHERE ([Username] = ? AND [Password] = ?)");
+            statement.setString(1, news);
+            statement.setString(2, username);
+            statement.setString(3, old);
+            success = (statement.executeUpdate() > 0);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return success;
+    }
 }

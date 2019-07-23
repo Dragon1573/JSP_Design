@@ -116,6 +116,7 @@
             </dt>
             <dd>
               <input id="fields" name="fields" type="hidden" value="Username" />
+              <input id="old_profile" name="old_profile" type="hidden" value="${certificate.username}" />
               <input type="text" required="required" id="new_password" name="new_profile" pattern="^[0-9a-zA-Z_]{2,20}$" onchange="uniqueCheck(new_profile);" />
             </dd>
             <dd>
@@ -124,7 +125,7 @@
               </p>
             </dd>
           </dl>
-          <button type="button" onclick="updateProfile('Username', new_profile)">提交</button>
+          <button type="button" onclick="updateProfile('Username', new_profile, old_profile)">提交</button>
         </form>
         <button type="button" id="accept_warning" onclick="acceptWarning();">仍要修改</button>
       </div>

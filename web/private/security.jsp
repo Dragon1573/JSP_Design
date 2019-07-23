@@ -17,6 +17,8 @@
   <meta charset="UTF-8">
   <link rel="icon" href="../img/favicon.ico" />
   <link rel="stylesheet" href="../css/settings.css" />
+  <script type="text/javascript" src="${path}/js/jquery-3.4.1.js"></script>
+  <script type="text/javascript" src="${path}/js/platform.js"></script>
   <title>用户设置</title>
 </head>
 
@@ -108,7 +110,7 @@
               <label for="old_password">旧密码</label>
             </dt>
             <dd>
-              <input type="password" required="required" id="old_password" />
+              <input type="password" required="required" id="old_password" name="old_password" />
             </dd>
           </dl>
           <dl>
@@ -116,7 +118,7 @@
               <label for="new_password">新密码</label>
             </dt>
             <dd>
-              <input type="password" required="required" id="new_password" />
+              <input type="password" required="required" id="new_password" name="new_password" />
             </dd>
           </dl>
           <dl>
@@ -124,10 +126,15 @@
               <label for="confirm_password">确认密码</label>
             </dt>
             <dd>
-              <input type="password" required="required" id="confirm_password" />
+              <p id="difference" hidden>
+                <span class="warning">密码不匹配！</span>
+              </p>
+            </dd>
+            <dd>
+              <input type="password" required="required" id="confirm_password" name="confirm_password" oninput="confirmCheck(new_password, confirm_password);" />
             </dd>
           </dl>
-          <button type="submit">提交</button>
+          <button type="button" onclick="updateProfile('Password', new_password, old_password);">提交</button>
         </form>
         <h1 class="subTitle">修改联系方式</h1>
         <form id="change_phone" accept-charset="UTF-8" method="post">
