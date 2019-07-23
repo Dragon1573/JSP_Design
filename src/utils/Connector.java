@@ -313,4 +313,26 @@ public class Connector implements Serializable {
         }
         return success;
     }
+
+    /**
+     * 修改密保
+     *
+     * @param username 用户名
+     * @param question 新问题
+     * @param answer   新答案
+     * @return 修改成功
+     */
+    public boolean changeProtection(String username, String question, String answer) {
+        boolean success = false;
+        try {
+            PreparedStatement statement = connection.prepareStatement("UPDATE [Users] SET [Question] = ?, [Answer] = ? WHERE [Username] = ?");
+            statement.setString(1, question);
+            statement.setString(2, answer);
+            statement.setString(3, username);
+            success = (statement.executeUpdate() > 0);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return success;
+    }
 }

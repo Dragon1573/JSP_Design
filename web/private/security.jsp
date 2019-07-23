@@ -156,7 +156,7 @@
               <label for="new_question">新密保问题</label>
             </dt>
             <dd>
-              <input type="text" id="new_question" required="required" />
+              <input type="text" id="new_question" name="new_question" required="required" />
             </dd>
           </dl>
           <dl>
@@ -164,10 +164,10 @@
               <label for="new_answer">新密保答案</label>
             </dt>
             <dd>
-              <input id="new_answer" type="text" required="required" />
+              <input id="new_answer" name="new_answer" type="text" required="required" />
             </dd>
           </dl>
-          <button type="submit">提交</button>
+          <button type="button" onclick="updateProfile('Protection', new_question, new_answer);">提交</button>
         </form>
       </div>
     </div>
