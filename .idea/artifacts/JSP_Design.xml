@@ -1,5 +1,5 @@
 <component name="ArtifactManager">
-  <artifact type="exploded-war" build-on-make="true" name="JSP_Design">
+  <artifact type="exploded-war" name="JSP_Design">
     <output-path>$PROJECT_DIR$/out</output-path>
     <root id="root">
       <element id="directory" name="WEB-INF">
@@ -8,7 +8,7 @@
         </element>
         <element id="directory" name="lib">
           <element id="library" level="application" name="Alibaba FastJSON" />
-          <element id="library" level="application" name="Microsoft JDBC for SQLServer 7.2" />
+          <element id="library" level="application" name="Microsoft JDBC for SQLServer 7.2 with JDK11" />
           <element id="library" level="application" name="Apache Jakarta JSLT 1.1.2" />
         </element>
       </element>
