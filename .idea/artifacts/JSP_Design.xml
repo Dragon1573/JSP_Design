@@ -7,9 +7,9 @@
           <element id="module-output" name="JSP_Design" />
         </element>
         <element id="directory" name="lib">
-          <element id="library" level="application" name="Alibaba FastJSON" />
-          <element id="library" level="application" name="Microsoft JDBC for SQLServer 7.2 with JDK11" />
-          <element id="library" level="application" name="Apache Jakarta JSLT 1.1.2" />
+          <element id="library" level="application" name="Alibaba FastJSON 1.2.58" />
+          <element id="library" level="application" name="Microsoft JDBC for SQLServer 7.2.1 with JDK11" />
+          <element id="library" level="application" name="Apache Jakarta JSTL 1.1.2" />
         </element>
       </element>
       <element id="javaee-facet-resources" facet="JSP_Design/web/Web" />

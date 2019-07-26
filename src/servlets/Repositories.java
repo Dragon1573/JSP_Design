@@ -56,4 +56,39 @@ public class Repositories extends HttpServlet {
         out.println(jsonStr);
         out.close();
     }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // 指定编码
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json; charset=UTF-8");
+
+        // 获取请求字段
+        String method = request.getParameter("method");
+        String username = request.getParameter("username");
+        String newName = request.getParameter("new_name");
+        String oldName = request.getParameter("old_name");
+
+        Connector connector = new Connector();
+        boolean success = false;
+
+        switch (method) {
+            case "rename":
+                success = connector.renameRepositories(username, newName, oldName);
+                break;
+
+            case "delete":
+                success = connector.deleteRepositories(username, oldName);
+                break;
+
+            default:
+                break;
+        }
+
+        JSONObject object = new JSONObject();
+        object.put("SUCCESS", success);
+        String json = JSON.toJSONString(object);
+        response.getWriter().println(json);
+    }
 }

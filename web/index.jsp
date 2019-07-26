@@ -16,7 +16,7 @@
       $(function () {
           // 页面加载时首次刷新
           fetchComments();
-          fetchRepositories();
+          fetchRepositories(false, $("title#username")[0].text);
           // 每15秒刷新一次评论区
           setInterval(fetchComments, 15000);
       });

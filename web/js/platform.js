@@ -4,10 +4,6 @@
  */
 
 /**
- * 计算相对路径
- */
-
-/**
  * 用户改名确认
  */
 function acceptWarning() {
@@ -250,28 +246,153 @@ function sendComments(username) {
 }
 
 /**
- * 刷新仓库列表
+ * 删除代码仓库
+ *
+ * @param username 用户名
+ * @param old_name 旧名称
  */
-function fetchRepositories() {
+function deleteRepositories(username, old_name) {
+    let checked = confirm(
+        "【警告】\n" +
+        "删除仓库是一个具有危险性的操作，一旦执行将不可撤销。\n" +
+        "您确认要删除仓库？"
+    );
+    if (checked) {
+        $.ajax({
+            url: "/JSP_Design/repositories",
+            type: "POST",
+            dataType: "json",
+            data: {
+                "method": "delete",
+                "username": username,
+                "new_name": null,
+                "old_name": old_name
+            },
+            success: function (response) {
+                if (response["SUCCESS"]) {
+                    alert("删除成功！");
+                } else {
+                    alert("错误：删除失败！");
+                }
+                fetchRepositories(true, username);
+            },
+            error: function () {
+                alert("错误：服务器连接异常！");
+                fetchRepositories(true, username);
+            }
+        });
+    }
+}
+
+/**
+ * 重命名仓库
+ *
+ * @param username 用户名
+ * @param oldName 旧名称
+ */
+function renameRepositories(username, oldName) {
+    // 获取表格
+    let $tbody = $("tbody#repositories");
+    // 对于每一行
+    $tbody.children().each(function () {
+        // 获取第一列jQuery对象
+        let $td = $(this).children().first();
+        // 获取仓库全名
+        let content = $td.text();
+        // 截取仓库名
+        let repoName = content.substr(content.indexOf("/") + 1);
+
+        // 设置HTML内容
+        $td.html("<input type='text' />");
+        $td.children().val(repoName);
+
+        // 切换按钮选项及按钮事件
+        $td.next().children().text("确定").unbind("click").click("click", function () {
+            $.ajax({
+                url: "/JSP_Design/repositories",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    "method": "rename",
+                    "username": username,
+                    "new_name": $td.children().val(),
+                    "old_name": oldName
+                },
+                success: function (response) {
+                    if (response["SUCCESS"]) {
+                        alert("重命名成功！");
+                    } else {
+                        alert("错误：重命名失败！");
+                    }
+                    fetchRepositories(true, username);
+                },
+                error: function () {
+                    alert("错误：服务器连接异常！");
+                    fetchRepositories(true, username);
+                }
+            });
+        });
+        $td.next().next().children().text("取消").unbind("click").click(function () {
+            fetchRepositories(true, username);
+        });
+    });
+}
+
+/**
+ * 刷新仓库列表
+ *
+ * @param isPrivate 是否为隐私状态
+ * @param username 用户名
+ */
+function fetchRepositories(isPrivate, username) {
     $.ajax({
         url: "/JSP_Design/repositories",
         type: "GET",
         dataType: "json",
         data: {
-            "username": $("title#username")[0].text
+            "username": username
         },
 
         success: function (response) {
-            let context = "";
-
+            // 获取列表对象
+            let $tbody = $("tbody#repositories");
+            $tbody.empty();
             $.each(response, function (k) {
-                context += "<tr><td style='font-size: larger'>" + response[k]["USERNAME"] + "/" + response[k]["REPOSITORY"] + "</td></tr>";
-            });
+                // 插入新元素
+                let $tr = $("<tr></tr>");
+                $tr.append("<td class='column1'></td>");
+                $tr.children("td.column1").html(
+                    username + "/" + response[k]["REPOSITORY"]
+                );
 
-            if (context === "") {
-                context = "<tr><td style='font-size: large'>【系统消息】未找到任何仓库！</td></tr>";
-            }
-            $("tbody#repositories").html(context);
+                // 权限控制
+                if (isPrivate) {
+                    $tr.append(
+                        "<td class='column2'></td>",
+                        "<td class='column3'></td>"
+                    );
+                    $tr.children("td.column2").append(
+                        "<a class='rename' href='javascript:void(0)'>重命名</a>"
+                    );
+                    $tr.children("td.column3").append(
+                        "<a class='delete' href='javascript:void(0)'>删除</a>"
+                    );
+                    $tr.find("a.rename").on(
+                        "click",
+                        function () {
+                            renameRepositories(username, response[k]["REPOSITORY"]);
+                        }
+                    );
+                    $tr.find("a.delete").on(
+                        "click",
+                        function () {
+                            deleteRepositories(username, response[k]["REPOSITORY"]);
+                        }
+                    );
+                }
+
+                $tbody.append($tr);
+            });
         },
 
         error: function () {
@@ -305,7 +426,7 @@ function uniqueCheck(username) {
         error: function () {
             alert("错误：请求页面异常！");
         }
-    })
+    });
 }
 
 /**
@@ -359,5 +480,5 @@ function updateProfile(fields, newProfile, oldProfile) {
         error: function () {
             alert("错误：服务器连接异常！");
         }
-    })
+    });
 }

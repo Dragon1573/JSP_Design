@@ -17,6 +17,8 @@
   <meta charset="UTF-8">
   <link rel="icon" href="../img/favicon.ico" />
   <link rel="stylesheet" href="../css/settings.css" />
+  <script type="text/javascript" src="${path}/js/jquery-3.4.1.js"></script>
+  <script type="text/javascript" src="${path}/js/platform.js"></script>
   <title>用户设置</title>
 </head>
 
@@ -103,7 +105,10 @@
       <div class="right">
         <h1 class="subTitle">仓库列表</h1>
         <table class="list">
-          <tbody class="list"></tbody>
+          <tbody class="list" id="repositories"></tbody>
+          <script type="text/javascript">
+              $(fetchRepositories(true, "${certificate.username}"));
+          </script>
         </table>
       </div>
     </div>

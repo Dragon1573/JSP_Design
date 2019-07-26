@@ -14,17 +14,11 @@ public class Connector implements Serializable {
     private static final long serialVersionUID = -5284530935717575965L;
     private Connection connection = null;
 
-    /**
-     * 初始化数据库连接
-     */
     public Connector() {
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            this.connection = DriverManager.getConnection("jdbc:sqlserver://localhost:1433;DatabaseName=Local_Git;", "sa", "123456");
-        } catch (ClassNotFoundException exception) {
-            System.err.println("错误：驱动未找到！");
-            exception.printStackTrace();
-        } catch (SQLException exception) {
+            connection = DriverManager.getConnection("jdbc:sqlserver://localhost:1433;DatabaseName=Local_Git;", "sa", "123456");
+        } catch (SQLException | ClassNotFoundException exception) {
             System.err.println("错误：无法连接到数据库！");
             exception.printStackTrace();
         }
@@ -59,7 +53,7 @@ public class Connector implements Serializable {
      */
     public ResultSet uniqueCheck(String username) {
         try {
-            PreparedStatement statement = this.connection.prepareStatement("SELECT COUNT(*) AS [Rows] FROM [dbo].[Users] WHERE [Username] = ?");
+            PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) AS [Rows] FROM [dbo].[Users] WHERE [Username] = ?");
             statement.setString(1, username);
             return statement.executeQuery();
         } catch (SQLException exception) {
@@ -77,7 +71,7 @@ public class Connector implements Serializable {
      */
     public int signUp(HashMap<String, String> profile) {
         try {
-            PreparedStatement statement = this.connection.prepareStatement("INSERT INTO [dbo].[Users] VALUES (?, ?, ?, ?, ?, ?)");
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO [dbo].[Users] VALUES (?, ?, ?, ?, ?, ?)");
             statement.setString(1, profile.get("Username"));
             statement.setString(2, Md5Util.encrypt(profile.get("Password")));
 
@@ -253,6 +247,26 @@ public class Connector implements Serializable {
     }
 
     /**
+     * 删除仓库
+     *
+     * @param username   用户名
+     * @param repository 仓库名
+     * @return 删除成功
+     */
+    public boolean deleteRepositories(String username, String repository) {
+        boolean success = false;
+        try {
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM [Repositories] WHERE [Username] = ? AND [Repository] = ?");
+            statement.setString(1, username);
+            statement.setString(2, repository);
+            success = (statement.executeUpdate() > 0);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return success;
+    }
+
+    /**
      * 修改用户名
      *
      * @param news 新用户名
@@ -349,6 +363,27 @@ public class Connector implements Serializable {
             PreparedStatement statement = connection.prepareStatement("UPDATE [Users] SET [Email] = ? WHERE [Username] = ?");
             statement.setString(1, mail);
             statement.setString(2, username);
+            success = (statement.executeUpdate() > 0);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return success;
+    }
+
+    /**
+     * 重命名仓库
+     *
+     * @param username 用户名
+     * @param newName  仓库名
+     * @return 操作成功
+     */
+    public boolean renameRepositories(String username, String newName, String oldName) {
+        boolean success = false;
+        try {
+            PreparedStatement statement = connection.prepareStatement("UPDATE [Repositories] SET [Repository] = ? WHERE ([Username] = ? AND [Repository] = ?)");
+            statement.setString(1, newName);
+            statement.setString(2, username);
+            statement.setString(3, oldName);
             success = (statement.executeUpdate() > 0);
         } catch (SQLException e) {
             e.printStackTrace();
