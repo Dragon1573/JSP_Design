@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -30,7 +31,7 @@ public class SignUp extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         // 设置请求编码格式
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
@@ -57,7 +58,7 @@ public class SignUp extends HttpServlet {
         int effect = connector.signUp(profile);
         if (effect <= 0) {
             // 用户信息未存入数据库
-            session.setAttribute("error", "SignUpFailedError");
+            request.setAttribute("error", "SignUpFailedError");
             responseUrl = "signUp.jsp";
         }
 
@@ -69,6 +70,6 @@ public class SignUp extends HttpServlet {
         }
 
         // 重定向页面
-        response.sendRedirect(responseUrl);
+        request.getRequestDispatcher(responseUrl).forward(request, response);
     }
 }

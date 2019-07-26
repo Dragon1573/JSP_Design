@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <jsp:useBean id="certificate" class="entities.UserInfo" scope="session">
 </jsp:useBean>
 <html>
@@ -54,14 +55,9 @@
                placeholder="小于50字符长度" />
       </div>
       <button type="submit">注册</button>
-      <%
-        if (session.getAttribute("error") != null && session.getAttribute("error").equals("SignUpFailedError")) {
-      %>
-      <p class="error">注册失败，请稍后重试……</p>
-      <%
-          session.removeAttribute("error");
-        }
-      %>
+      <c:if test="${error eq 'SignUpFailedError'}">
+        <p class="error">注册失败，请稍后重试……</p>
+      </c:if>
     </form>
   </div>
 </body>
