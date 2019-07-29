@@ -393,6 +393,16 @@ function fetchRepositories(isPrivate, username) {
 
                 $tbody.append($tr);
             });
+
+            if ($tbody.html() === "") {
+                $tbody.html(
+                    "<tr>" +
+                    "<td colspan='3' style='text-align:center;font-size:larger'>" +
+                    "<span class='warning'>不存在代码仓库！</span>" +
+                    "</td>" +
+                    "</tr>"
+                );
+            }
         },
 
         error: function () {
