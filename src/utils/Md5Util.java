@@ -18,12 +18,16 @@ public class Md5Util implements Serializable {
      * @return MD5信息摘要
      */
     public static String encrypt(String s) {
+        byte[] btInput = s.getBytes();
+        return encrypt(btInput);
+    }
+
+    public static String encrypt(byte[] bytes) {
         try {
-            byte[] btInput = s.getBytes();
             // 获得MD5摘要算法的 MessageDigest 对象
             MessageDigest mdInst = MessageDigest.getInstance("MD5");
             // 使用指定的字节更新摘要
-            mdInst.update(btInput);
+            mdInst.update(bytes);
             // 获得密文
             byte[] md = mdInst.digest();
             // 把密文转换成十六进制的字符串形式

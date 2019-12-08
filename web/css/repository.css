@@ -1,0 +1,38 @@
+/**
+ * @author Dragon1573
+ * @date 2019/12/5
+ */
+
+.searchBar {
+    padding: 10px;
+    width: 1000px;
+}
+
+input {
+    text-align: left;
+    font-size: large;
+    padding: 5px;
+}
+
+a.newRepository {
+    display: inline-block;
+    width: 100px;
+    border-radius: 10px;
+    background-color: #279f43;
+    font-weight: bolder;
+    font-size: large;
+    padding: 8px;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+}
+
+table#repoTable {
+    width: 1015px;
+    padding: 25px;
+    border: thin lightsteelblue solid;
+}
+
+tbody#repositories {
+    font-size: large;
+}

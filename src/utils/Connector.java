@@ -2,13 +2,13 @@ package utils;
 
 import java.io.Serializable;
 import java.sql.*;
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
  * 数据库连接工具
  *
  * @author Drogon1573
- * @date 2019/07/01
  */
 public class Connector implements Serializable {
     private static final long serialVersionUID = -5284530935717575965L;
@@ -27,7 +27,9 @@ public class Connector implements Serializable {
     /**
      * 登录认证
      *
-     * @param username 用户名
+     * @param username
+     *     用户名
+     *
      * @return 受影响的行数
      */
     public ResultSet login(String username) {
@@ -48,7 +50,9 @@ public class Connector implements Serializable {
     /**
      * 用户唯一性校验
      *
-     * @param username 用户输入的注册用户名
+     * @param username
+     *     用户输入的注册用户名
+     *
      * @return 受影响的行数
      */
     public ResultSet uniqueCheck(String username) {
@@ -66,7 +70,9 @@ public class Connector implements Serializable {
     /**
      * 用户注册
      *
-     * @param profile 用户档案
+     * @param profile
+     *     用户档案
+     *
      * @return 受影响的行数
      */
     public int signUp(HashMap<String, String> profile) {
@@ -111,7 +117,9 @@ public class Connector implements Serializable {
     /**
      * 获取密保问题
      *
-     * @param username 用户名
+     * @param username
+     *     用户名
+     *
      * @return 密保问题
      */
     public String getQuestion(String username) {
@@ -135,7 +143,9 @@ public class Connector implements Serializable {
     /**
      * 获取用户评论
      *
-     * @param username 用户名
+     * @param username
+     *     用户名
+     *
      * @return 用户评论
      */
     public ResultSet fetchComments(String username) {
@@ -160,8 +170,11 @@ public class Connector implements Serializable {
     /**
      * 密码重置身份认证
      *
-     * @param username 用户名
-     * @param answer   密保答案
+     * @param username
+     *     用户名
+     * @param answer
+     *     密保答案
+     *
      * @return 校验标记
      */
     public boolean resetVerify(String username, String answer) {
@@ -184,7 +197,8 @@ public class Connector implements Serializable {
     /**
      * 密码重置
      *
-     * @param password 密码
+     * @param password
+     *     密码
      */
     public void reset(String username, String password) {
         try {
@@ -200,8 +214,11 @@ public class Connector implements Serializable {
     /**
      * 发送评论
      *
-     * @param username 用户名
-     * @param comments 评论内容
+     * @param username
+     *     用户名
+     * @param comments
+     *     评论内容
+     *
      * @return boolean
      */
     public boolean sendComments(String username, String comments) {
@@ -221,25 +238,26 @@ public class Connector implements Serializable {
     /**
      * 检索用户仓库
      *
-     * @param username 用户名
+     * @param username
+     *     用户名
+     *
      * @return 结果集
      */
     public ResultSet fetchRepositories(String username) {
-        final String anonymous = "佛大云服务";
+        final String[] anonymous = {"佛大云服务", "Anonymous"};
         ResultSet resultSet = null;
         PreparedStatement statement;
 
         try {
-            if (anonymous.equals(username)) {
+            if (Arrays.asList(anonymous).contains(username)) {
                 // 匿名用户
-                statement = connection.prepareStatement("SELECT [Username],[Repository] FROM [Repositories] GROUP BY [Username], [Repository]");
-                resultSet = statement.executeQuery();
+                statement = connection.prepareStatement("SELECT [Username], [Repository] FROM [Repositories] GROUP BY [Username], [Repository]");
             } else {
                 // 登录用户
                 statement = connection.prepareStatement("SELECT [Username], [Repository] FROM [Repositories] WHERE [Username] = ? GROUP BY [Username], [Repository]");
                 statement.setString(1, username);
-                resultSet = statement.executeQuery();
             }
+            resultSet = statement.executeQuery();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -249,8 +267,11 @@ public class Connector implements Serializable {
     /**
      * 删除仓库
      *
-     * @param username   用户名
-     * @param repository 仓库名
+     * @param username
+     *     用户名
+     * @param repository
+     *     仓库名
+     *
      * @return 删除成功
      */
     public boolean deleteRepositories(String username, String repository) {
@@ -269,8 +290,11 @@ public class Connector implements Serializable {
     /**
      * 修改用户名
      *
-     * @param news 新用户名
-     * @param old  旧用户名
+     * @param news
+     *     新用户名
+     * @param old
+     *     旧用户名
+     *
      * @return 修改成功
      */
     public boolean changeUsername(String news, String old) {
@@ -289,9 +313,13 @@ public class Connector implements Serializable {
     /**
      * 修改用户密码
      *
-     * @param username 用户名
-     * @param news     新密码（MD5）
-     * @param old      旧密码（MD5）
+     * @param username
+     *     用户名
+     * @param news
+     *     新密码（MD5）
+     * @param old
+     *     旧密码（MD5）
+     *
      * @return 修改成功
      */
     public boolean changePassword(String username, String news, String old) {
@@ -311,8 +339,11 @@ public class Connector implements Serializable {
     /**
      * 修改联系方式
      *
-     * @param username 用户名
-     * @param news     新联系方式
+     * @param username
+     *     用户名
+     * @param news
+     *     新联系方式
+     *
      * @return 修改成功
      */
     public boolean changePhone(String username, String news) {
@@ -331,9 +362,13 @@ public class Connector implements Serializable {
     /**
      * 修改密保
      *
-     * @param username 用户名
-     * @param question 新问题
-     * @param answer   新答案
+     * @param username
+     *     用户名
+     * @param question
+     *     新问题
+     * @param answer
+     *     新答案
+     *
      * @return 修改成功
      */
     public boolean changeProtection(String username, String question, String answer) {
@@ -353,8 +388,11 @@ public class Connector implements Serializable {
     /**
      * 修改电子邮箱
      *
-     * @param username 用户名
-     * @param mail     电子邮箱
+     * @param username
+     *     用户名
+     * @param mail
+     *     电子邮箱
+     *
      * @return 修改成功
      */
     public boolean changeEmail(String username, String mail) {
@@ -373,8 +411,11 @@ public class Connector implements Serializable {
     /**
      * 重命名仓库
      *
-     * @param username 用户名
-     * @param newName  仓库名
+     * @param username
+     *     用户名
+     * @param newName
+     *     仓库名
+     *
      * @return 操作成功
      */
     public boolean renameRepositories(String username, String newName, String oldName) {
@@ -389,5 +430,38 @@ public class Connector implements Serializable {
             e.printStackTrace();
         }
         return success;
+    }
+
+    /**
+     * 上传文件
+     *
+     * @param username
+     *     用户名
+     * @param repoName
+     *     存储库名
+     * @param path
+     *     相对路径
+     * @param fileName
+     *     文件名
+     * @param details
+     *     二进制文件内容
+     */
+    public void uploadFiles(final String username, final String repoName, final String path, final String fileName, byte[] details) {
+        if (details == null) {
+            // 没有内容的目录/空文件将由其他4项内容生成MD5校验值
+            details = (username + repoName + path + fileName).getBytes();
+        }
+        try {
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO [dbo].[Repositories] VALUES (?, ?, ?, ?, ?, ?);");
+            statement.setString(1, username);
+            statement.setString(2, repoName);
+            statement.setString(3, path);
+            statement.setString(4, fileName);
+            statement.setString(5, Md5Util.encrypt(details));
+            statement.setBytes(6, details);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

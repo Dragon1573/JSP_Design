@@ -17,7 +17,7 @@
   <meta charset="UTF-8">
   <link rel="stylesheet" href="../css/settings.css" />
   <link rel="icon" href="../img/favicon.ico" />
-  <script type="text/javascript" src="../js/jquery-3.4.1.js"></script>
+  <script type="text/javascript" src="../bootstrap/jquery.min.js"></script>
   <script type="text/javascript" src="../js/platform.js"></script>
   <title>用户设置</title>
 </head>

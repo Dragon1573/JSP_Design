@@ -349,9 +349,7 @@ function fetchRepositories(isPrivate, username) {
         url: "/JSP_Design/repositories",
         type: "GET",
         dataType: "json",
-        data: {
-            "username": username
-        },
+        data: {"username": username},
 
         success: function (response) {
             // 获取列表对象
@@ -362,7 +360,7 @@ function fetchRepositories(isPrivate, username) {
                 let $tr = $("<tr></tr>");
                 $tr.append("<td class='column1'></td>");
                 $tr.children("td.column1").html(
-                    username + "/" + response[k]["REPOSITORY"]
+                    response[k]["USERNAME"] + "/" + response[k]["REPOSITORY"]
                 );
 
                 // 权限控制

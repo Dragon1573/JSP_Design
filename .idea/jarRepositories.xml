@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="RemoteRepositoriesConfiguration">
+    <remote-repository>
+      <option name="id" value="955d91c6-2e3d-49d9-bf25-59dcca14062e" />
+      <option name="name" value="955d91c6-2e3d-49d9-bf25-59dcca14062e" />
+      <option name="url" value="https://maven.aliyun.com/repository/public" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="577c7738-0bd0-4867-97d6-97e4a2d81465" />
+      <option name="name" value="577c7738-0bd0-4867-97d6-97e4a2d81465" />
+      <option name="url" value="http://repo1.maven.org/maven2/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="3ce49a25-cf03-4769-ada0-82e92bdb73ab" />
+      <option name="name" value="3ce49a25-cf03-4769-ada0-82e92bdb73ab" />
+      <option name="url" value="http://repo2.maven.org/maven2/" />
+    </remote-repository>
+  </component>
+</project>

@@ -28,7 +28,7 @@
   </title>
 
   <link href="${path}/css/error.css" rel="stylesheet" type="text/css" />
-  <script src="${path}/js/jquery-3.4.1.js" type="text/javascript"></script>
+  <script src="${path}/bootstrap/jquery.min.js" type="text/javascript"></script>
 </head>
 
 <body>

@@ -19,9 +19,11 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" scope="PROVIDED" name="Tomcat 9.0.21" level="application_server_libraries" />
-    <orderEntry type="library" name="Alibaba FastJSON 1.2.58" level="application" />
-    <orderEntry type="library" name="Apache Jakarta JSTL 1.1.2" level="application" />
-    <orderEntry type="library" name="Microsoft JDBC for SQLServer 7.2.1 with JDK11" level="application" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="Tomcat 9.0.21" level="application_server_libraries" />
+    <orderEntry type="library" exported="" name="Apache Jakarta JSTL 1.1.2" level="application" />
+    <orderEntry type="library" exported="" name="Microsoft JDBC for SQLServer 7.2.1 with JDK11" level="application" />
+    <orderEntry type="library" exported="" name="Alibaba FastJSON 1.2.60" level="project" />
+    <orderEntry type="library" exported="" name="Apache Common FileUpload 1.4" level="application" />
+    <orderEntry type="library" exported="" name="Apache Commons IO 2.6" level="project" />
   </component>
 </module>

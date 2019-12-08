@@ -4,15 +4,15 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+
 import utils.Connector;
 
 /**
@@ -36,7 +36,7 @@ public class Repositories extends HttpServlet {
         ResultSet resultSet = connector.fetchRepositories(username);
 
         // 创建JSON数组
-        ArrayList<JSONObject> list = new ArrayList<>();
+        JSONArray list = new JSONArray();
         try {
             while (resultSet != null && resultSet.next()) {
                 JSONObject object = new JSONObject();

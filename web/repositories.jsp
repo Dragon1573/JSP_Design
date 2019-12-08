@@ -9,18 +9,17 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <link rel="stylesheet" type="text/css" href="css/index.css" />
+  <link rel="stylesheet" type="text/css" href="css/repository.css" />
   <link rel="shortcut icon" href="img/favicon.ico" type="image/canvasObject-icon" />
   <script type="text/javascript" src="bootstrap/jquery.min.js"></script>
   <script type="text/javascript" src="js/platform.js"></script>
   <script type="text/javascript">
       $(function () {
-          let username = $("title#username")[0].text;
+          let username = $("title#username")[0];
           // 页面加载时首次刷新
-          fetchComments();
-          fetchRepositories(false, username);
-          // 每15秒刷新一次评论区
-          setInterval(fetchComments, 15000);
-          setInterval(fetchRepositories, 15000, false, username);
+          fetchRepositories(false, username.text);
+          // 每15秒刷新一次仓库列表
+          setInterval(fetchRepositories, 15000, false, username.text);
       });
   </script>
   <%
@@ -28,7 +27,7 @@
     response.setCharacterEncoding("UTF-8");
   %>
   <c:choose> <c:when test="${param.user eq null}">
-    <title id="username">佛大云服务</title>
+    <title id="username">${certificate.username}</title>
   </c:when> <c:otherwise>
     <title id="username">${param.user}</title>
   </c:otherwise> </c:choose>
@@ -105,31 +104,17 @@
       </div>
     </header>
     <div class="mainContent">
-      <div class="leftContainer">
-        <h1>仓库列表</h1>
-        <div class="comments">
-          <table>
-            <tbody id="repositories"></tbody>
-          </table>
-        </div>
-      </div>
-      <div class="rightContainer">
-        <h1>评论区</h1>
-        <div class="comments">
-          <table>
-            <tbody id="comments"></tbody>
-          </table>
-        </div>
+      <h1>仓库列表</h1>
+      <div class="comments">
+        <!-- 确认用户已经登录成功 -->
         <c:if test="${certificate.verified && !'Anonymous'.equals(certificate.username)}">
-          <div id="comments-div">
-            <form action="javascript:void(0)">
-              <label for="sender">发表评论：</label>
-              <textarea id="sender" class="comments"></textarea>
-              <button type="submit" onclick="sendComments('${certificate.username}');">发表</button>
-              <button type="reset" id="reset">清空</button>
-            </form>
+          <div class="searchBar" style="text-align: right;">
+            <a class="newRepository" href="private/newRepo.jsp">上传</a>
           </div>
         </c:if>
+        <table id="repoTable">
+          <tbody id="repositories"></tbody>
+        </table>
       </div>
     </div>
   </div>

@@ -14,7 +14,7 @@
   <link rel="stylesheet" type="text/css" href="../css/forget.css" />
   <link rel="shortcut icon" type="image/x-icon" href="../img/favicon.ico" />
 
-  <script type="text/javascript" src="../js/jquery-3.4.1.js"></script>
+  <script type="text/javascript" src="../bootstrap/jquery.min.js"></script>
   <script type="text/javascript" src="../js/platform.js"></script>
   <title>重置密码</title>
 </head>
