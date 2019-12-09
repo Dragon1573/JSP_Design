@@ -359,7 +359,12 @@ function fetchRepositories(isPrivate, username) {
                 // 插入新元素
                 let $tr = $("<tr></tr>");
                 $tr.append("<td class='column1'></td>");
-                $tr.children("td.column1").html(
+                $tr.children("td.column1").append(
+                    "<a href='/JSP_Design/files.jsp?user=" +
+                    response[k]["USERNAME"] + "&repo=" +
+                    response[k]["REPOSITORY"] + "&path='></a>"
+                );
+                $tr.children("td.column1").children("a").html(
                     response[k]["USERNAME"] + "/" + response[k]["REPOSITORY"]
                 );
 
@@ -406,7 +411,8 @@ function fetchRepositories(isPrivate, username) {
         error: function () {
             alert("错误：服务器连接失败！");
         }
-    });
+    })
+    ;
 }
 
 /**

@@ -5,6 +5,8 @@ import java.sql.*;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import com.alibaba.fastjson.JSONArray;
+
 /**
  * 数据库连接工具
  *
@@ -105,8 +107,9 @@ public class Connector implements Serializable {
             } else {
                 statement.setString(6, profile.get("Answer"));
             }
-
-            return statement.executeUpdate();
+            final int affected = statement.executeUpdate();
+            statement.close();
+            return affected;
         } catch (SQLException exception) {
             System.err.println("错误：SQL语句异常！");
             exception.printStackTrace();
@@ -129,11 +132,11 @@ public class Connector implements Serializable {
             PreparedStatement statement = connection.prepareStatement("SELECT [Question] FROM [dbo].[Users] WHERE [Username] = ?");
             statement.setString(1, username);
             ResultSet resultSet = statement.executeQuery();
-
             // 提取密保问题
             if (resultSet != null && resultSet.next()) {
                 question = resultSet.getString("Question");
             }
+            statement.close();
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
@@ -150,7 +153,6 @@ public class Connector implements Serializable {
      */
     public ResultSet fetchComments(String username) {
         final String anonymous = "佛大云服务";
-
         ResultSet resultSet = null;
         try {
             if (!anonymous.equals(username)) {
@@ -184,10 +186,10 @@ public class Connector implements Serializable {
             statement.setString(1, username);
             statement.setString(2, answer);
             ResultSet resultSet = statement.executeQuery();
-
             while (resultSet != null && resultSet.next()) {
                 isPassed = (resultSet.getInt("Flag") > 0);
             }
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -206,6 +208,7 @@ public class Connector implements Serializable {
             statement.setString(1, Md5Util.encrypt(password));
             statement.setString(2, username);
             statement.executeUpdate();
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -229,6 +232,7 @@ public class Connector implements Serializable {
             statement.setString(1, username);
             statement.setString(2, comments);
             isSaved = (statement.executeUpdate() > 0);
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -281,6 +285,7 @@ public class Connector implements Serializable {
             statement.setString(1, username);
             statement.setString(2, repository);
             success = (statement.executeUpdate() > 0);
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -304,6 +309,7 @@ public class Connector implements Serializable {
             statement.setString(1, news);
             statement.setString(2, old);
             success = (statement.executeUpdate() > 0);
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -330,6 +336,7 @@ public class Connector implements Serializable {
             statement.setString(2, username);
             statement.setString(3, old);
             success = (statement.executeUpdate() > 0);
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -353,6 +360,7 @@ public class Connector implements Serializable {
             statement.setString(1, news);
             statement.setString(2, username);
             success = (statement.executeUpdate() > 0);
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -379,6 +387,7 @@ public class Connector implements Serializable {
             statement.setString(2, answer);
             statement.setString(3, username);
             success = (statement.executeUpdate() > 0);
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -402,6 +411,7 @@ public class Connector implements Serializable {
             statement.setString(1, mail);
             statement.setString(2, username);
             success = (statement.executeUpdate() > 0);
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -426,6 +436,7 @@ public class Connector implements Serializable {
             statement.setString(2, username);
             statement.setString(3, oldName);
             success = (statement.executeUpdate() > 0);
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -460,8 +471,68 @@ public class Connector implements Serializable {
             statement.setString(5, Md5Util.encrypt(details));
             statement.setBytes(6, details);
             statement.executeUpdate();
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 获取仓库中的文件列表
+     *
+     * @param username
+     *     用户名
+     * @param repository
+     *     仓库名
+     * @param path
+     *     相对路径名
+     */
+    public JSONArray listFiles(final String username, final String repository, final String path) {
+        JSONArray folders = new JSONArray();
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT [Filename] FROM [dbo].[Repositories] WHERE [Username] = ? AND [Repository] = ? AND [Path] = ? GROUP BY [Filename]");
+            statement.setString(1, username);
+            statement.setString(2, repository);
+            statement.setString(3, path);
+            ResultSet set = statement.executeQuery();
+            while (set != null && set.next()) {
+                folders.add(set.getString("Filename"));
+            }
+            statement.close();
+        } catch (SQLException e) {
+            System.err.println("[Error] 拉取文件列表异常！");
+            e.printStackTrace();
+        }
+        return folders;
+    }
+
+    /**
+     * 获取文件
+     *
+     * @param username
+     *     用户名
+     * @param repository
+     *     仓库名
+     * @param filename
+     *     文件名
+     *
+     * @return 二进制文件内容
+     */
+    public byte[] getFiles(final String username, final String repository, final String filename) {
+        byte[] content = null;
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT [Details] FROM [dbo].[Repositories] WHERE [Username] = ? AND [Repository] = ? AND [Filename] = ?");
+            statement.setString(1, username);
+            statement.setString(2, repository);
+            statement.setString(3, filename);
+            ResultSet set = statement.executeQuery();
+            while (set != null && set.next()) {
+                content = set.getBytes("Details");
+            }
+            statement.close();
+        } catch (SQLException e) {
+            System.err.println("[Error] 文件读取异常！");
+            e.printStackTrace();
+        } return content;
     }
 }
