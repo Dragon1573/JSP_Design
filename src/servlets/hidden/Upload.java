@@ -120,6 +120,8 @@ public class Upload extends HttpServlet {
             Connector connector = new Connector();
             // 构建文件夹
             String[] path = object.getObject("pathName", String[].class);
+            // 增加路径前缀，防止目录树的树枝合并
+            String fullPath = "";
             // 合法目录至少有2段内容以上
             if (path.length >= 2) {
                 if (isLegal(path[0])) {
@@ -136,18 +138,20 @@ public class Upload extends HttpServlet {
                     connector.uploadFiles(
                         object.getString("Username"),
                         object.getString("repoName"),
-                        path[i - 1],
-                        path[i],
+                        fullPath,
+                        fullPath + "/" + path[i],
                         null
                     );
+                    // 更新路径前缀
+                    fullPath += "/" + path[i];
                 }
             }
             // 上传文件
             connector.uploadFiles(
                 object.getString("Username"),
                 object.getString("repoName"),
-                path[path.length - 1],
-                object.getString("Filename"),
+                fullPath,
+                fullPath + "/" + object.getString("Filename"),
                 object.getBytes("Content-Bytes")
             );
         } catch (FileUploadException e) {

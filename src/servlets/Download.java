@@ -32,6 +32,7 @@ public class Download extends HttpServlet {
         final String repository = request.getParameter("repo");
         String filename = request.getParameter("file");
         byte[] content = connector.getFiles(username, repository, filename);
+        filename = filename.substring(filename.lastIndexOf("/") + 1);
         filename = URLEncoder.encode(filename, StandardCharsets.UTF_8);
 
         // 设置响应头并准备写入文件
