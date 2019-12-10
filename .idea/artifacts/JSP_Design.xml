@@ -7,11 +7,11 @@
           <element id="module-output" name="JSP_Design" />
         </element>
         <element id="directory" name="lib">
-          <element id="library" level="application" name="Microsoft JDBC for SQLServer 7.2.1 with JDK11" />
-          <element id="library" level="application" name="Apache Jakarta JSTL 1.1.2" />
-          <element id="library" level="project" name="Alibaba FastJSON 1.2.60" />
-          <element id="library" level="application" name="Apache Common FileUpload 1.4" />
           <element id="library" level="project" name="Apache Commons IO 2.6" />
+          <element id="library" level="project" name="Apache Commons FileUpload 1.4" />
+          <element id="library" level="project" name="Apache Jakarta JSTL 1.2" />
+          <element id="library" level="project" name="Microsoft JDBC for SQLServer 7.4.1 JRE11" />
+          <element id="library" level="project" name="Alibaba FastJSON 1.2.62" />
         </element>
       </element>
       <element id="javaee-facet-resources" facet="JSP_Design/web/Web" />

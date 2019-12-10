@@ -14,12 +14,28 @@ import com.alibaba.fastjson.JSONArray;
  */
 public class Connector implements Serializable {
     private static final long serialVersionUID = -5284530935717575965L;
+    private static final String DRIVER;
+    private static final String URL;
+    private static final String USERNAME;
+    private static final String PASSWORD;
     private Connection connection = null;
+
+    static {
+        // 数据库驱动器
+        DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+        // 数据库连接URL
+        URL = "jdbc:sqlserver://localhost:1433;DatabaseName=Local_Git;";
+        // 数据库登录用户名
+        USERNAME = "sa";
+        // 数据库登录密码
+        PASSWORD = "123456";
+    }
 
     public Connector() {
         try {
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            connection = DriverManager.getConnection("jdbc:sqlserver://localhost:1433;DatabaseName=Local_Git;", "sa", "123456");
+            Class.forName(DRIVER);
+            connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            System.out.println("[INFO] 数据库登陆成功！");
         } catch (SQLException | ClassNotFoundException exception) {
             System.err.println("错误：无法连接到数据库！");
             exception.printStackTrace();
@@ -37,7 +53,9 @@ public class Connector implements Serializable {
     public ResultSet login(String username) {
         ResultSet resultSet = null;
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT [Password] FROM [dbo].[Users] WHERE ([Username] = ? OR [Phone] = ? OR [Email] = ?)");
+            PreparedStatement statement = connection.prepareStatement(
+                "SELECT [Password] FROM [dbo].[Users] WHERE ([Username] = ? OR [Phone] "
+                + "= ? OR [Email] = ?)");
             statement.setString(1, username);
             statement.setString(2, username);
             statement.setString(3, username);
@@ -59,7 +77,8 @@ public class Connector implements Serializable {
      */
     public ResultSet uniqueCheck(String username) {
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) AS [Rows] FROM [dbo].[Users] WHERE [Username] = ?");
+            PreparedStatement statement = connection.prepareStatement(
+                "SELECT COUNT(*) AS [Rows] FROM [dbo].[Users] WHERE [Username] = ?");
             statement.setString(1, username);
             return statement.executeQuery();
         } catch (SQLException exception) {
@@ -79,7 +98,8 @@ public class Connector implements Serializable {
      */
     public int signUp(HashMap<String, String> profile) {
         try {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO [dbo].[Users] VALUES (?, ?, ?, ?, ?, ?)");
+            PreparedStatement statement = connection.prepareStatement(
+                "INSERT INTO [dbo].[Users] VALUES (?, ?, ?, ?, ?, ?)");
             statement.setString(1, profile.get("Username"));
             statement.setString(2, Md5Util.encrypt(profile.get("Password")));
 
@@ -129,7 +149,8 @@ public class Connector implements Serializable {
         String question = null;
         try {
             // 执行SQL语句
-            PreparedStatement statement = connection.prepareStatement("SELECT [Question] FROM [dbo].[Users] WHERE [Username] = ?");
+            PreparedStatement statement = connection.prepareStatement(
+                "SELECT [Question] FROM [dbo].[Users] WHERE [Username] = ?");
             statement.setString(1, username);
             ResultSet resultSet = statement.executeQuery();
             // 提取密保问题
@@ -156,7 +177,8 @@ public class Connector implements Serializable {
         ResultSet resultSet = null;
         try {
             if (!anonymous.equals(username)) {
-                PreparedStatement statement = connection.prepareStatement("SELECT * FROM [Comments] WHERE [Sender] = ?");
+                PreparedStatement statement = connection.prepareStatement(
+                    "SELECT * FROM [Comments] WHERE [Sender] = ?");
                 statement.setString(1, username);
                 resultSet = statement.executeQuery();
             } else {
@@ -182,7 +204,9 @@ public class Connector implements Serializable {
     public boolean resetVerify(String username, String answer) {
         boolean isPassed = false;
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) AS [Flag] FROM [Users] WHERE [Username] = ? AND [Answer] = ?");
+            PreparedStatement statement = connection.prepareStatement(
+                "SELECT COUNT(*) AS [Flag] FROM [Users] WHERE [Username] = ? AND "
+                + "[Answer] = ?");
             statement.setString(1, username);
             statement.setString(2, answer);
             ResultSet resultSet = statement.executeQuery();
@@ -204,7 +228,8 @@ public class Connector implements Serializable {
      */
     public void reset(String username, String password) {
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE [Users] SET [Password] = ? WHERE [Username] = ?");
+            PreparedStatement statement = connection.prepareStatement(
+                "UPDATE [Users] SET [Password] = ? WHERE [Username] = ?");
             statement.setString(1, Md5Util.encrypt(password));
             statement.setString(2, username);
             statement.executeUpdate();
@@ -228,7 +253,8 @@ public class Connector implements Serializable {
         // 数据存入标记
         boolean isSaved = false;
         try {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO [Comments] VALUES (?, ?, SYSDATETIME())");
+            PreparedStatement statement = connection.prepareStatement(
+                "INSERT INTO [Comments] VALUES (?, ?, SYSDATETIME())");
             statement.setString(1, username);
             statement.setString(2, comments);
             isSaved = (statement.executeUpdate() > 0);
@@ -255,10 +281,14 @@ public class Connector implements Serializable {
         try {
             if (Arrays.asList(anonymous).contains(username)) {
                 // 匿名用户
-                statement = connection.prepareStatement("SELECT [Username], [Repository] FROM [Repositories] GROUP BY [Username], [Repository]");
+                statement = connection.prepareStatement(
+                    "SELECT [Username], [Repository] FROM [Repositories] GROUP BY "
+                    + "[Username], [Repository]");
             } else {
                 // 登录用户
-                statement = connection.prepareStatement("SELECT [Username], [Repository] FROM [Repositories] WHERE [Username] = ? GROUP BY [Username], [Repository]");
+                statement = connection.prepareStatement(
+                    "SELECT [Username], [Repository] FROM [Repositories] WHERE "
+                    + "[Username] = ? GROUP BY [Username], [Repository]");
                 statement.setString(1, username);
             }
             resultSet = statement.executeQuery();
@@ -281,7 +311,8 @@ public class Connector implements Serializable {
     public boolean deleteRepositories(String username, String repository) {
         boolean success = false;
         try {
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM [Repositories] WHERE [Username] = ? AND [Repository] = ?");
+            PreparedStatement statement = connection.prepareStatement(
+                "DELETE FROM [Repositories] WHERE [Username] = ? AND [Repository] = ?");
             statement.setString(1, username);
             statement.setString(2, repository);
             success = (statement.executeUpdate() > 0);
@@ -305,7 +336,8 @@ public class Connector implements Serializable {
     public boolean changeUsername(String news, String old) {
         boolean success = false;
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE [Users] SET [Username] = ? WHERE [Username] = ?");
+            PreparedStatement statement = connection.prepareStatement(
+                "UPDATE [Users] SET [Username] = ? WHERE [Username] = ?");
             statement.setString(1, news);
             statement.setString(2, old);
             success = (statement.executeUpdate() > 0);
@@ -331,7 +363,9 @@ public class Connector implements Serializable {
     public boolean changePassword(String username, String news, String old) {
         boolean success = false;
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE [Users] SET [Password] = ? WHERE ([Username] = ? AND [Password] = ?)");
+            PreparedStatement statement = connection.prepareStatement(
+                "UPDATE [Users] SET [Password] = ? WHERE ([Username] = ? AND [Password]"
+                + " = ?)");
             statement.setString(1, news);
             statement.setString(2, username);
             statement.setString(3, old);
@@ -356,7 +390,8 @@ public class Connector implements Serializable {
     public boolean changePhone(String username, String news) {
         boolean success = false;
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE [Users] SET [Phone] = ? WHERE [Username] = ?");
+            PreparedStatement statement = connection.prepareStatement(
+                "UPDATE [Users] SET [Phone] = ? WHERE [Username] = ?");
             statement.setString(1, news);
             statement.setString(2, username);
             success = (statement.executeUpdate() > 0);
@@ -382,7 +417,8 @@ public class Connector implements Serializable {
     public boolean changeProtection(String username, String question, String answer) {
         boolean success = false;
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE [Users] SET [Question] = ?, [Answer] = ? WHERE [Username] = ?");
+            PreparedStatement statement = connection.prepareStatement(
+                "UPDATE [Users] SET [Question] = ?, [Answer] = ? WHERE [Username] = ?");
             statement.setString(1, question);
             statement.setString(2, answer);
             statement.setString(3, username);
@@ -407,7 +443,8 @@ public class Connector implements Serializable {
     public boolean changeEmail(String username, String mail) {
         boolean success = false;
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE [Users] SET [Email] = ? WHERE [Username] = ?");
+            PreparedStatement statement = connection.prepareStatement(
+                "UPDATE [Users] SET [Email] = ? WHERE [Username] = ?");
             statement.setString(1, mail);
             statement.setString(2, username);
             success = (statement.executeUpdate() > 0);
@@ -431,7 +468,9 @@ public class Connector implements Serializable {
     public boolean renameRepositories(String username, String newName, String oldName) {
         boolean success = false;
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE [Repositories] SET [Repository] = ? WHERE ([Username] = ? AND [Repository] = ?)");
+            PreparedStatement statement = connection.prepareStatement(
+                "UPDATE [Repositories] SET [Repository] = ? WHERE ([Username] = ? AND "
+                + "[Repository] = ?)");
             statement.setString(1, newName);
             statement.setString(2, username);
             statement.setString(3, oldName);
@@ -457,13 +496,20 @@ public class Connector implements Serializable {
      * @param details
      *     二进制文件内容
      */
-    public void uploadFiles(final String username, final String repoName, final String path, final String fileName, byte[] details) {
+    public void uploadFiles(
+        final String username,
+        final String repoName,
+        final String path,
+        final String fileName,
+        byte[] details
+    ) {
         if (details == null) {
             // 没有内容的目录/空文件将由其他4项内容生成MD5校验值
             details = (username + repoName + path + fileName).getBytes();
         }
         try {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO [dbo].[Repositories] VALUES (?, ?, ?, ?, ?, ?);");
+            PreparedStatement statement = connection.prepareStatement(
+                "INSERT INTO [dbo].[Repositories] VALUES (?, ?, ?, ?, ?, ?);");
             statement.setString(1, username);
             statement.setString(2, repoName);
             statement.setString(3, path);
@@ -487,10 +533,14 @@ public class Connector implements Serializable {
      * @param path
      *     相对路径名
      */
-    public JSONArray listFiles(final String username, final String repository, final String path) {
+    public JSONArray listFiles(
+        final String username, final String repository, final String path
+    ) {
         JSONArray folders = new JSONArray();
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT [Filename] FROM [dbo].[Repositories] WHERE [Username] = ? AND [Repository] = ? AND [Path] = ? GROUP BY [Filename]");
+            PreparedStatement statement = connection.prepareStatement(
+                "SELECT [Filename] FROM [dbo].[Repositories] WHERE [Username] = ? AND "
+                + "[Repository] = ? AND [Path] = ? GROUP BY [Filename]");
             statement.setString(1, username);
             statement.setString(2, repository);
             statement.setString(3, path);
@@ -518,10 +568,14 @@ public class Connector implements Serializable {
      *
      * @return 二进制文件内容
      */
-    public byte[] getFiles(final String username, final String repository, final String filename) {
+    public byte[] getFiles(
+        final String username, final String repository, final String filename
+    ) {
         byte[] content = null;
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT [Details] FROM [dbo].[Repositories] WHERE [Username] = ? AND [Repository] = ? AND [Filename] = ?");
+            PreparedStatement statement = connection.prepareStatement(
+                "SELECT [Details] FROM [dbo].[Repositories] WHERE [Username] = ? AND "
+                + "[Repository] = ? AND [Filename] = ?");
             statement.setString(1, username);
             statement.setString(2, repository);
             statement.setString(3, filename);
@@ -533,6 +587,31 @@ public class Connector implements Serializable {
         } catch (SQLException e) {
             System.err.println("[Error] 文件读取异常！");
             e.printStackTrace();
-        } return content;
+        }
+        return content;
+    }
+
+    /**
+     * 递归删除仓库目录
+     */
+    public boolean deleteFolder(final String username, final String repository,
+        final String path) {
+        boolean success = false;
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                "DELETE FROM [dbo].[Repositories] "
+                + "WHERE "
+                + "[Username] = ? AND [Repository] = ? AND [Filename] LIKE ?"
+            );
+            statement.setString(1, username);
+            statement.setString(2, repository);
+            statement.setString(3, path + "%");
+            success = (statement.executeUpdate() > 0);
+            statement.close();
+        } catch (SQLException e) {
+            System.err.println("[ERROR] 目录递归删除失败！");
+            e.printStackTrace();
+        }
+        return success;
     }
 }

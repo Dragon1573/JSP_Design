@@ -12,18 +12,20 @@
       </configuration>
     </facet>
   </component>
-  <component name="NewModuleRootManager" inherit-compiler-output="true">
+  <component name="NewModuleRootManager">
+    <output url="file://$MODULE_DIR$/out/WEB-INF/classes" />
     <exclude-output />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/out" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="Tomcat 9.0.21" level="application_server_libraries" />
-    <orderEntry type="library" exported="" name="Apache Jakarta JSTL 1.1.2" level="application" />
-    <orderEntry type="library" exported="" name="Microsoft JDBC for SQLServer 7.2.1 with JDK11" level="application" />
-    <orderEntry type="library" exported="" name="Alibaba FastJSON 1.2.60" level="project" />
-    <orderEntry type="library" exported="" name="Apache Common FileUpload 1.4" level="application" />
     <orderEntry type="library" exported="" name="Apache Commons IO 2.6" level="project" />
+    <orderEntry type="library" exported="" name="Apache Commons FileUpload 1.4" level="project" />
+    <orderEntry type="library" exported="" name="Apache Jakarta JSTL 1.2" level="project" />
+    <orderEntry type="library" exported="" name="Microsoft JDBC for SQLServer 7.4.1 JRE11" level="project" />
+    <orderEntry type="library" exported="" name="Alibaba FastJSON 1.2.62" level="project" />
   </component>
 </module>

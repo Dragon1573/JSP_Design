@@ -18,6 +18,35 @@
   <link rel="shortcut icon" href="img/favicon.ico" type="image/canvasObject-icon" />
   <script type="text/javascript" src="bootstrap/jquery.min.js"></script>
   <title>仓库详情 - ${param.user}/${param.repo}</title>
+  <script type="application/javascript">
+      function deleteFolders(username, repository, path) {
+          let checked = confirm(
+              "警告！\n" +
+              "递归删除目录是破坏性操作！\n" +
+              "是否继续？"
+          );
+          if (checked) {
+              $.ajax({
+                  url: "/JSP_Design/delete",
+                  type: "POST",
+                  dataType: "json",
+                  data: {
+                      "user": username,
+                      "repo": repository,
+                      "path": path
+                  },
+                  success: function (response) {
+                      alert(response["SUCCESS"] ? "删除成功！" : "删除失败！");
+                      window.location.reload();
+                  },
+                  error: function () {
+                      alert("错误！服务器连接异常！");
+                      window.location.reload();
+                  }
+              });
+          }
+      }
+  </script>
   <%
     // 设置请求编码方式
     request.setCharacterEncoding("UTF-8");
@@ -128,11 +157,23 @@
 
             <c:forEach var="file" items="${array}">
               <tr>
-                <td>
+                <td style="width: 85%;">
                   <a href="files.jsp?user=${param.user}&repo=${param.repo}&path=${file}">
                       ${file}
                   </a>
                 </td>
+                <!-- 只有用户正常登录、不是匿名、为仓库所有者时才允许删除 -->
+                <c:if test="${certificate.verified == true &&
+                !'Anonymous'.equals(certificate.username) &&
+                certificate.username.equals(param.user)}">
+                  <td style="width: 15%;">
+                    <a
+                        href="javascript:deleteFolders('${param.user}','${param.repo}','${file}');">
+                      递归删除
+                    </a>
+
+                  </td>
+                </c:if>
               </tr>
             </c:forEach>
           </tbody>
