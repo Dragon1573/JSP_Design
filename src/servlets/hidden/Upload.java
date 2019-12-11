@@ -140,7 +140,8 @@ public class Upload extends HttpServlet {
                         object.getString("repoName"),
                         fullPath,
                         fullPath + "/" + path[i],
-                        null
+                        null,
+                        true
                     );
                     // 更新路径前缀
                     fullPath += "/" + path[i];
@@ -152,7 +153,8 @@ public class Upload extends HttpServlet {
                 object.getString("repoName"),
                 fullPath,
                 fullPath + "/" + object.getString("Filename"),
-                object.getBytes("Content-Bytes")
+                object.getBytes("Content-Bytes"),
+                false
             );
         } catch (FileUploadException e) {
             e.printStackTrace();

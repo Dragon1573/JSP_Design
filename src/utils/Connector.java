@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * 数据库连接工具
@@ -18,7 +19,6 @@ public class Connector implements Serializable {
     private static final String URL;
     private static final String USERNAME;
     private static final String PASSWORD;
-    private Connection connection = null;
 
     static {
         // 数据库驱动器
@@ -30,6 +30,8 @@ public class Connector implements Serializable {
         // 数据库登录密码
         PASSWORD = "123456";
     }
+
+    private Connection connection = null;
 
     public Connector() {
         try {
@@ -501,7 +503,8 @@ public class Connector implements Serializable {
         final String repoName,
         final String path,
         final String fileName,
-        byte[] details
+        byte[] details,
+        boolean isDir
     ) {
         if (details == null) {
             // 没有内容的目录/空文件将由其他4项内容生成MD5校验值
@@ -509,13 +512,14 @@ public class Connector implements Serializable {
         }
         try {
             PreparedStatement statement = connection.prepareStatement(
-                "INSERT INTO [dbo].[Repositories] VALUES (?, ?, ?, ?, ?, ?);");
+                "INSERT INTO [dbo].[Repositories] VALUES (?, ?, ?, ?, ?, ?, ?)");
             statement.setString(1, username);
             statement.setString(2, repoName);
             statement.setString(3, path);
             statement.setString(4, fileName);
             statement.setString(5, Md5Util.encrypt(details));
             statement.setBytes(6, details);
+            statement.setBoolean(7, isDir);
             statement.executeUpdate();
             statement.close();
         } catch (SQLException e) {
@@ -539,14 +543,21 @@ public class Connector implements Serializable {
         JSONArray folders = new JSONArray();
         try {
             PreparedStatement statement = connection.prepareStatement(
-                "SELECT [Filename] FROM [dbo].[Repositories] WHERE [Username] = ? AND "
-                + "[Repository] = ? AND [Path] = ? GROUP BY [Filename]");
+                "SELECT [Filename],[Folder] "
+                + "FROM [dbo].[Repositories] "
+                + "WHERE [Username] = ? "
+                + "AND [Repository] = ? "
+                + "AND [Path] = ? "
+                + "GROUP BY [Filename],[Folder]");
             statement.setString(1, username);
             statement.setString(2, repository);
             statement.setString(3, path);
             ResultSet set = statement.executeQuery();
             while (set != null && set.next()) {
-                folders.add(set.getString("Filename"));
+                JSONObject file = new JSONObject();
+                file.put("Name", set.getString("Filename"));
+                file.put("isDir", set.getBoolean("Folder"));
+                folders.add(file);
             }
             statement.close();
         } catch (SQLException e) {
@@ -594,15 +605,16 @@ public class Connector implements Serializable {
     /**
      * 递归删除仓库目录
      */
-    public boolean deleteFolder(final String username, final String repository,
-        final String path) {
+    public boolean deleteFolder(
+        final String username, final String repository, final String path
+    ) {
         boolean success = false;
         try {
             PreparedStatement statement = connection.prepareStatement(
                 "DELETE FROM [dbo].[Repositories] "
-                + "WHERE "
-                + "[Username] = ? AND [Repository] = ? AND [Filename] LIKE ?"
-            );
+                + "WHERE [Username] = ? "
+                + "AND [Repository] = ? "
+                + "AND [Filename] LIKE ?");
             statement.setString(1, username);
             statement.setString(2, repository);
             statement.setString(3, path + "%");

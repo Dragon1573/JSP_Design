@@ -1,6 +1,8 @@
 package servlets.hidden;
 
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,7 +22,7 @@ public class Delete extends HttpServlet {
     @Override
     protected void doPost(
         final HttpServletRequest request, final HttpServletResponse response
-    ) throws ServletException, IOException {
+    ) throws IOException {
         // 设置编码格式
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
@@ -34,7 +36,13 @@ public class Delete extends HttpServlet {
         );
         JSONObject object = new JSONObject();
         object.put("SUCCESS", success);
-        final String json = JSON.toJSONString(object);
+        ResultSet set = connector.fetchRepositories(request.getParameter("user"));
+        try {
+            object.put("EMPTY", !set.next());
+        } catch (SQLException e) {
+            System.err.println("[ERROR] 数据库连接异常或结果集已关闭！");
+            e.printStackTrace();
+        } final String json = JSON.toJSONString(object);
         response.getWriter().println(json);
     }
 }

@@ -14,11 +14,15 @@
   <script type="text/javascript" src="js/platform.js"></script>
   <script type="text/javascript">
       $(function () {
-          let username = $("title#username")[0];
-          // 页面加载时首次刷新
-          fetchRepositories(false, username.text);
-          // 每15秒刷新一次仓库列表
-          setInterval(fetchRepositories, 15000, false, username.text);
+          if ("${param.user}" === "") {
+              // 页面加载时首次刷新
+              fetchRepositories(false, "Anonymous");
+              // 每15秒刷新一次仓库列表
+              setInterval(fetchRepositories, 15000, false, "Anonymous");
+          } else {
+              fetchRepositories(false, "${param.user}");
+              setInterval(fetchRepositories, 15000, false, "${param.user}");
+          }
       });
   </script>
   <%
@@ -26,9 +30,9 @@
     response.setCharacterEncoding("UTF-8");
   %>
   <c:choose> <c:when test="${param.user eq null}">
-    <title id="username">${certificate.username}</title>
+    <title id="username">公共仓库 - 佛大云服务</title>
   </c:when> <c:otherwise>
-    <title id="username">${param.user}</title>
+    <title id="username">${param.user} - 佛大云服务</title>
   </c:otherwise> </c:choose>
 </head>
 

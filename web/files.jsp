@@ -15,6 +15,7 @@
   <meta charset="UTF-8" http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <link rel="stylesheet" type="text/css" href="css/index.css" />
   <link rel="stylesheet" type="text/css" href="css/repository.css" />
+  <link rel="stylesheet" type="text/css" href="css/settings.css" />
   <link rel="shortcut icon" href="img/favicon.ico" type="image/canvasObject-icon" />
   <script type="text/javascript" src="bootstrap/jquery.min.js"></script>
   <title>仓库详情 - ${param.user}/${param.repo}</title>
@@ -37,7 +38,13 @@
                   },
                   success: function (response) {
                       alert(response["SUCCESS"] ? "删除成功！" : "删除失败！");
-                      window.location.reload();
+                      if (response["EMPTY"]) {
+                          // 仓库已删除
+                          window.location.href = "repositories.jsp?user=${param.user}";
+                      } else {
+                          // 刷新当前目录
+                          window.location.reload();
+                      }
                   },
                   error: function () {
                       alert("错误！服务器连接异常！");
@@ -144,23 +151,26 @@
       <div class="comments">
         <table id="repoTable">
           <tbody id="repositories">
-            <c:choose>
-
-              <c:when test="${array.size() == 0}">
-
-                <jsp:forward
-                    page="/download?user=${param.user}&repo=${param.repo}&file=${param.path}" />
-
-              </c:when>
-
-            </c:choose>
-
             <c:forEach var="file" items="${array}">
               <tr>
                 <td style="width: 85%;">
-                  <a href="files.jsp?user=${param.user}&repo=${param.repo}&path=${file}">
-                      ${file}
-                  </a>
+                  <c:choose>
+
+                    <c:when test="${file.isDir == true}">
+                      <a
+                          href="files.jsp?user=${param.user}&repo=${param.repo}&path=${file.Name}">
+                          ${file.Name}
+                      </a>
+                    </c:when>
+
+                    <c:otherwise>
+                      <a
+                          href="download?user=${param.user}&repo=${param.repo}&file=${file.Name}">
+                          ${file.Name}
+                      </a>
+                    </c:otherwise>
+
+                  </c:choose>
                 </td>
                 <!-- 只有用户正常登录、不是匿名、为仓库所有者时才允许删除 -->
                 <c:if test="${certificate.verified == true &&
@@ -168,7 +178,7 @@
                 certificate.username.equals(param.user)}">
                   <td style="width: 15%;">
                     <a
-                        href="javascript:deleteFolders('${param.user}','${param.repo}','${file}');">
+                        href="javascript:deleteFolders('${param.user}','${param.repo}','${file.Name}');">
                       递归删除
                     </a>
 
@@ -177,6 +187,18 @@
               </tr>
             </c:forEach>
           </tbody>
+          <script type="application/javascript">
+              let $list = $("tbody#repositories");
+              if ($list.html().trim().length === 0) {
+                  $list.html(
+                      "<tr>" +
+                      "<td style='font-size:larger'>" +
+                      "<span class='warning'>空目录！</span>" +
+                      "</td>" +
+                      "</tr>"
+                  );
+              }
+          </script>
         </table>
       </div>
     </div>
