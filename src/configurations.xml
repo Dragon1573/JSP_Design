@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+  <comment>
+    JDBC驱动程序配置
+
+    注：请严格按照如下样式进行配置！
+  </comment>
+
+  <!-- 数据库驱动类 -->
+  <entry key="driver">com.microsoft.sqlserver.jdbc.SQLServerDriver</entry>
+
+  <!-- 数据库驱动类型 -->
+  <entry key="type">jdbc</entry>
+
+  <!-- 数据库服务器类型 -->
+  <entry key="server">sqlserver</entry>
+
+  <!-- 数据库服务器地址（域名或IP） -->
+  <entry key="host">localhost</entry>
+
+  <!-- 数据库服务器名 -->
+  <entry key="instance">Express_2017</entry>
+
+  <!-- 数据库监听端口 -->
+  <entry key="port">1433</entry>
+
+  <!-- 数据库名 -->
+  <entry key="database">Local_Git</entry>
+
+  <!-- 数据库身份认证用户名 -->
+  <entry key="username">sa</entry>
+
+  <!-- 数据库身份认证密码 -->
+  <entry key="password">123456</entry>
+</properties>

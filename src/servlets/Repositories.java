@@ -40,8 +40,8 @@ public class Repositories extends HttpServlet {
         try {
             while (resultSet != null && resultSet.next()) {
                 JSONObject object = new JSONObject();
-                object.put("USERNAME", resultSet.getString("Username"));
-                object.put("REPOSITORY", resultSet.getString("Repository"));
+                object.put("USERNAME", resultSet.getNString("Username"));
+                object.put("REPOSITORY", resultSet.getNString("Repository"));
                 list.add(object);
             }
         } catch (SQLException e) {

@@ -1,9 +1,12 @@
 package utils;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.*;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Objects;
+import java.util.Properties;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -15,31 +18,53 @@ import com.alibaba.fastjson.JSONObject;
  */
 public class Connector implements Serializable {
     private static final long serialVersionUID = -5284530935717575965L;
-    private static final String DRIVER;
-    private static final String URL;
-    private static final String USERNAME;
-    private static final String PASSWORD;
-
-    static {
-        // 数据库驱动器
-        DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-        // 数据库连接URL
-        URL = "jdbc:sqlserver://localhost:1433;DatabaseName=Local_Git;";
-        // 数据库登录用户名
-        USERNAME = "sa";
-        // 数据库登录密码
-        PASSWORD = "123456";
-    }
-
     private Connection connection = null;
 
     public Connector() {
         try {
-            Class.forName(DRIVER);
-            connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-            System.out.println("[INFO] 数据库登陆成功！");
-        } catch (SQLException | ClassNotFoundException exception) {
-            System.err.println("错误：无法连接到数据库！");
+            Properties properties = new Properties();
+            // 载入配置文件
+            properties.loadFromXML(Objects.requireNonNull(this
+                .getClass()
+                .getClassLoader()
+                .getResourceAsStream("configurations.xml")));
+            // 加载数据库驱动器
+            Class.forName(properties.getProperty("driver"));
+            // 生成连接字符串
+            final String
+                url =
+                properties.getProperty("type")
+                + ":"
+                + properties.getProperty("server")
+                + "://"
+                + properties.getProperty("host")
+                + "\\"
+                + properties.getProperty("instance")
+                + ":"
+                + properties.getProperty("port")
+                + ";DatabaseName="
+                + properties.getProperty("database")
+                + ";";
+            // 尝试连接
+            connection = DriverManager.getConnection(
+                url,
+                properties.getProperty("username"),
+                properties.getProperty("password")
+            );
+        } catch (SQLException | ClassNotFoundException | IOException exception) {
+            switch (exception.getClass().getTypeName()) {
+                case "SQLException":
+                    System.err.println("[Error] 数据库连接异常！");
+                    break;
+                case "ClassNotFoundException":
+                    System.err.println("[Error] 未找到数据库驱动器！");
+                    break;
+                case "IOException":
+                    System.err.println("[Error] 配置文件读取错误！");
+                    break;
+                default:
+                    System.err.println("[Error] 未知错误！");
+            }
             exception.printStackTrace();
         }
     }
@@ -58,9 +83,9 @@ public class Connector implements Serializable {
             PreparedStatement statement = connection.prepareStatement(
                 "SELECT [Password] FROM [dbo].[Users] WHERE ([Username] = ? OR [Phone] "
                 + "= ? OR [Email] = ?)");
-            statement.setString(1, username);
-            statement.setString(2, username);
-            statement.setString(3, username);
+            statement.setNString(1, username);
+            statement.setNString(2, username);
+            statement.setNString(3, username);
             resultSet = statement.executeQuery();
         } catch (SQLException exception) {
             System.err.println("错误：SQL语句异常！");
@@ -81,7 +106,7 @@ public class Connector implements Serializable {
         try {
             PreparedStatement statement = connection.prepareStatement(
                 "SELECT COUNT(*) AS [Rows] FROM [dbo].[Users] WHERE [Username] = ?");
-            statement.setString(1, username);
+            statement.setNString(1, username);
             return statement.executeQuery();
         } catch (SQLException exception) {
             System.err.println("错误：SQL语句异常！");
@@ -102,7 +127,7 @@ public class Connector implements Serializable {
         try {
             PreparedStatement statement = connection.prepareStatement(
                 "INSERT INTO [dbo].[Users] VALUES (?, ?, ?, ?, ?, ?)");
-            statement.setString(1, profile.get("Username"));
+            statement.setNString(1, profile.get("Username"));
             statement.setString(2, Md5Util.encrypt(profile.get("Password")));
 
             /*
@@ -122,12 +147,12 @@ public class Connector implements Serializable {
             if ("".equals(profile.get("Question"))) {
                 statement.setNull(5, Types.VARCHAR);
             } else {
-                statement.setString(5, profile.get("Question"));
+                statement.setNString(5, profile.get("Question"));
             }
             if ("".equals(profile.get("Answer"))) {
                 statement.setNull(6, Types.VARCHAR);
             } else {
-                statement.setString(6, profile.get("Answer"));
+                statement.setNString(6, profile.get("Answer"));
             }
             final int affected = statement.executeUpdate();
             statement.close();
@@ -153,11 +178,11 @@ public class Connector implements Serializable {
             // 执行SQL语句
             PreparedStatement statement = connection.prepareStatement(
                 "SELECT [Question] FROM [dbo].[Users] WHERE [Username] = ?");
-            statement.setString(1, username);
+            statement.setNString(1, username);
             ResultSet resultSet = statement.executeQuery();
             // 提取密保问题
             if (resultSet != null && resultSet.next()) {
-                question = resultSet.getString("Question");
+                question = resultSet.getNString("Question");
             }
             statement.close();
         } catch (SQLException exception) {
@@ -175,13 +200,13 @@ public class Connector implements Serializable {
      * @return 用户评论
      */
     public ResultSet fetchComments(String username) {
-        final String anonymous = "佛大云服务";
+        final String anonymous = "Anonymous";
         ResultSet resultSet = null;
         try {
             if (!anonymous.equals(username)) {
                 PreparedStatement statement = connection.prepareStatement(
                     "SELECT * FROM [Comments] WHERE [Sender] = ?");
-                statement.setString(1, username);
+                statement.setNString(1, username);
                 resultSet = statement.executeQuery();
             } else {
                 Statement statement = connection.createStatement();
@@ -209,8 +234,8 @@ public class Connector implements Serializable {
             PreparedStatement statement = connection.prepareStatement(
                 "SELECT COUNT(*) AS [Flag] FROM [Users] WHERE [Username] = ? AND "
                 + "[Answer] = ?");
-            statement.setString(1, username);
-            statement.setString(2, answer);
+            statement.setNString(1, username);
+            statement.setNString(2, answer);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet != null && resultSet.next()) {
                 isPassed = (resultSet.getInt("Flag") > 0);
@@ -233,7 +258,7 @@ public class Connector implements Serializable {
             PreparedStatement statement = connection.prepareStatement(
                 "UPDATE [Users] SET [Password] = ? WHERE [Username] = ?");
             statement.setString(1, Md5Util.encrypt(password));
-            statement.setString(2, username);
+            statement.setNString(2, username);
             statement.executeUpdate();
             statement.close();
         } catch (SQLException e) {
@@ -251,14 +276,17 @@ public class Connector implements Serializable {
      *
      * @return boolean
      */
-    public boolean sendComments(String username, String comments) {
+    public boolean sendComments(
+        final String username, final String title, final String comments
+    ) {
         // 数据存入标记
         boolean isSaved = false;
         try {
             PreparedStatement statement = connection.prepareStatement(
-                "INSERT INTO [Comments] VALUES (?, ?, SYSDATETIME())");
-            statement.setString(1, username);
-            statement.setString(2, comments);
+                "INSERT INTO [Comments] VALUES (?, ?, ?, SYSDATETIME())");
+            statement.setNString(1, username);
+            statement.setNString(2, title);
+            statement.setNString(3, comments);
             isSaved = (statement.executeUpdate() > 0);
             statement.close();
         } catch (SQLException e) {
@@ -291,7 +319,7 @@ public class Connector implements Serializable {
                 statement = connection.prepareStatement(
                     "SELECT [Username], [Repository] FROM [Repositories] WHERE "
                     + "[Username] = ? GROUP BY [Username], [Repository]");
-                statement.setString(1, username);
+                statement.setNString(1, username);
             }
             resultSet = statement.executeQuery();
         } catch (SQLException e) {
@@ -315,8 +343,8 @@ public class Connector implements Serializable {
         try {
             PreparedStatement statement = connection.prepareStatement(
                 "DELETE FROM [Repositories] WHERE [Username] = ? AND [Repository] = ?");
-            statement.setString(1, username);
-            statement.setString(2, repository);
+            statement.setNString(1, username);
+            statement.setNString(2, repository);
             success = (statement.executeUpdate() > 0);
             statement.close();
         } catch (SQLException e) {
@@ -340,8 +368,8 @@ public class Connector implements Serializable {
         try {
             PreparedStatement statement = connection.prepareStatement(
                 "UPDATE [Users] SET [Username] = ? WHERE [Username] = ?");
-            statement.setString(1, news);
-            statement.setString(2, old);
+            statement.setNString(1, news);
+            statement.setNString(2, old);
             success = (statement.executeUpdate() > 0);
             statement.close();
         } catch (SQLException e) {
@@ -369,7 +397,7 @@ public class Connector implements Serializable {
                 "UPDATE [Users] SET [Password] = ? WHERE ([Username] = ? AND [Password]"
                 + " = ?)");
             statement.setString(1, news);
-            statement.setString(2, username);
+            statement.setNString(2, username);
             statement.setString(3, old);
             success = (statement.executeUpdate() > 0);
             statement.close();
@@ -395,7 +423,7 @@ public class Connector implements Serializable {
             PreparedStatement statement = connection.prepareStatement(
                 "UPDATE [Users] SET [Phone] = ? WHERE [Username] = ?");
             statement.setString(1, news);
-            statement.setString(2, username);
+            statement.setNString(2, username);
             success = (statement.executeUpdate() > 0);
             statement.close();
         } catch (SQLException e) {
@@ -421,9 +449,9 @@ public class Connector implements Serializable {
         try {
             PreparedStatement statement = connection.prepareStatement(
                 "UPDATE [Users] SET [Question] = ?, [Answer] = ? WHERE [Username] = ?");
-            statement.setString(1, question);
-            statement.setString(2, answer);
-            statement.setString(3, username);
+            statement.setNString(1, question);
+            statement.setNString(2, answer);
+            statement.setNString(3, username);
             success = (statement.executeUpdate() > 0);
             statement.close();
         } catch (SQLException e) {
@@ -448,7 +476,7 @@ public class Connector implements Serializable {
             PreparedStatement statement = connection.prepareStatement(
                 "UPDATE [Users] SET [Email] = ? WHERE [Username] = ?");
             statement.setString(1, mail);
-            statement.setString(2, username);
+            statement.setNString(2, username);
             success = (statement.executeUpdate() > 0);
             statement.close();
         } catch (SQLException e) {
@@ -473,9 +501,9 @@ public class Connector implements Serializable {
             PreparedStatement statement = connection.prepareStatement(
                 "UPDATE [Repositories] SET [Repository] = ? WHERE ([Username] = ? AND "
                 + "[Repository] = ?)");
-            statement.setString(1, newName);
-            statement.setString(2, username);
-            statement.setString(3, oldName);
+            statement.setNString(1, newName);
+            statement.setNString(2, username);
+            statement.setNString(3, oldName);
             success = (statement.executeUpdate() > 0);
             statement.close();
         } catch (SQLException e) {
@@ -513,10 +541,10 @@ public class Connector implements Serializable {
         try {
             PreparedStatement statement = connection.prepareStatement(
                 "INSERT INTO [dbo].[Repositories] VALUES (?, ?, ?, ?, ?, ?, ?)");
-            statement.setString(1, username);
-            statement.setString(2, repoName);
-            statement.setString(3, path);
-            statement.setString(4, fileName);
+            statement.setNString(1, username);
+            statement.setNString(2, repoName);
+            statement.setNString(3, path);
+            statement.setNString(4, fileName);
             statement.setString(5, Md5Util.encrypt(details));
             statement.setBytes(6, details);
             statement.setBoolean(7, isDir);
@@ -549,13 +577,13 @@ public class Connector implements Serializable {
                 + "AND [Repository] = ? "
                 + "AND [Path] = ? "
                 + "GROUP BY [Filename],[Folder]");
-            statement.setString(1, username);
-            statement.setString(2, repository);
-            statement.setString(3, path);
+            statement.setNString(1, username);
+            statement.setNString(2, repository);
+            statement.setNString(3, path);
             ResultSet set = statement.executeQuery();
             while (set != null && set.next()) {
                 JSONObject file = new JSONObject();
-                file.put("Name", set.getString("Filename"));
+                file.put("Name", set.getNString("Filename"));
                 file.put("isDir", set.getBoolean("Folder"));
                 folders.add(file);
             }
@@ -587,9 +615,9 @@ public class Connector implements Serializable {
             PreparedStatement statement = connection.prepareStatement(
                 "SELECT [Details] FROM [dbo].[Repositories] WHERE [Username] = ? AND "
                 + "[Repository] = ? AND [Filename] = ?");
-            statement.setString(1, username);
-            statement.setString(2, repository);
-            statement.setString(3, filename);
+            statement.setNString(1, username);
+            statement.setNString(2, repository);
+            statement.setNString(3, filename);
             ResultSet set = statement.executeQuery();
             while (set != null && set.next()) {
                 content = set.getBytes("Details");
@@ -615,9 +643,9 @@ public class Connector implements Serializable {
                 + "WHERE [Username] = ? "
                 + "AND [Repository] = ? "
                 + "AND [Filename] LIKE ?");
-            statement.setString(1, username);
-            statement.setString(2, repository);
-            statement.setString(3, path + "%");
+            statement.setNString(1, username);
+            statement.setNString(2, repository);
+            statement.setNString(3, path + "%");
             success = (statement.executeUpdate() > 0);
             statement.close();
         } catch (SQLException e) {
@@ -625,5 +653,52 @@ public class Connector implements Serializable {
             e.printStackTrace();
         }
         return success;
+    }
+
+    /**
+     * @param timeStamp
+     *     字符串时间戳
+     *
+     * @return 以JSON封装的评论详情
+     */
+    public JSONObject getComments(final String timeStamp) {
+        JSONObject object = new JSONObject();
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                "SELECT * FROM [dbo].[Comments] WHERE [DateTime] = ?");
+            statement.setString(1, timeStamp);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet != null && resultSet.next()) {
+                object.put("Sender", resultSet.getNString("Sender"));
+                object.put("Title", resultSet.getNString("Title"));
+                object.put("Details", resultSet.getNString("Details"));
+            }
+            statement.close();
+        } catch (SQLException e) {
+            System.err.println("[ERROR] 数据库请求异常！");
+            e.printStackTrace();
+        }
+        return object;
+    }
+
+    /**
+     * @param timestamp
+     *     字符串时间戳
+     *
+     * @return 记录是否已被删除
+     */
+    public boolean deleteComments(final String timestamp) {
+        boolean isDeleted = false;
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                "DELETE FROM [dbo].[Comments] WHERE [DateTime] = ?");
+            statement.setString(1, timestamp);
+            isDeleted = (statement.executeUpdate() > 0);
+            statement.close();
+        } catch (SQLException e) {
+            System.err.println("[ERROR] 记录删除失败！");
+            e.printStackTrace();
+        }
+        return isDeleted;
     }
 }

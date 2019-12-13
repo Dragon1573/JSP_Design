@@ -2,8 +2,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<jsp:useBean id="certificate" class="entities.UserInfo" scope="session">
-</jsp:useBean>
+<jsp:useBean id="certificate" class="entities.UserInfo" scope="session" />
 <html>
 
 <head>

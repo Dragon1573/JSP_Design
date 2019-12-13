@@ -15,11 +15,16 @@
   <script type="text/javascript">
       $(function () {
           let username = $("title#username")[0].text;
-          // 页面加载时首次刷新
-          fetchComments();
+          if (username === "佛大云服务") {
+              // 页面加载时首次刷新
+              fetchComments("Anonymous");
+              // 每15秒刷新一次评论区
+              setInterval(fetchComments, 15000, "Anonymous");
+          } else {
+              fetchComments(username);
+              setInterval(fetchComments, 15000, username);
+          }
           fetchRepositories(false, username);
-          // 每15秒刷新一次评论区
-          setInterval(fetchComments, 15000);
           setInterval(fetchRepositories, 15000, false, username);
       });
   </script>
@@ -120,16 +125,6 @@
             <tbody id="comments"></tbody>
           </table>
         </div>
-        <c:if test="${certificate.verified && !'Anonymous'.equals(certificate.username)}">
-          <div id="comments-div">
-            <form action="javascript:void(0)">
-              <label for="sender">发表评论：</label>
-              <textarea id="sender" class="comments"></textarea>
-              <button type="submit" onclick="sendComments('${certificate.username}');">发表</button>
-              <button type="reset" id="reset">清空</button>
-            </form>
-          </div>
-        </c:if>
       </div>
     </div>
   </div>

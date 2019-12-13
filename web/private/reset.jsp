@@ -20,7 +20,7 @@
 </head>
 
 <body>
-  <form name="newPassword" method="post" action="reset">
+  <form name="newPassword" method="post" action="../reset">
     <div class="forgetFrame">
       <%-- 新密码 --%>
       <label for="password">新密码</label>

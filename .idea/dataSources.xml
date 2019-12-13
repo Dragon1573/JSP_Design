@@ -5,10 +5,7 @@
       <driver-ref>sqlserver.ms</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbc-driver>
-      <jdbc-url>jdbc:sqlserver://localhost:1433;database=Local_Git</jdbc-url>
-      <driver-properties>
-        <property name="applicationName" value="DataGrip" />
-      </driver-properties>
+      <jdbc-url>jdbc:sqlserver://localhost\EXPRESS_2017:1433;database=Local_Git</jdbc-url>
       <code-style-scheme-name>Alibaba P3C CodeStyle</code-style-scheme-name>
     </data-source>
   </component>

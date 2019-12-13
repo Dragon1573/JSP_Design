@@ -13,7 +13,7 @@ html, body {
 }
 
 .mainContainer {
-    margin: auto;
+    margin: 0 auto;
     font-size: smaller;
     min-height: 100%;
     box-sizing: border-box;
@@ -62,8 +62,8 @@ textarea.comments {
 header {
     text-align: left;
     display: flex;
-    margin-top: 25px;
-    margin-bottom: 50px;
+    padding-top: 25px;
+    padding-bottom: 50px;
 }
 
 header > div {

@@ -1,3 +1,9 @@
+<%--
+  Created by JetBrains IntelliJ IDEA.
+  User: Dragon1573
+  Date: 2019/12/12
+--%>
+
 <!DOCTYPE html>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page isELIgnored="false" %>
@@ -6,34 +12,44 @@
 <html>
 
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="UTF-8" http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <link rel="stylesheet" type="text/css" href="css/index.css" />
+  <link rel="stylesheet" type="text/css" href="css/settings.css" />
   <link rel="stylesheet" type="text/css" href="css/repository.css" />
-  <link rel="shortcut icon" href="img/favicon.ico" type="image/canvasObject-icon" />
-  <script type="text/javascript" src="bootstrap/jquery.min.js"></script>
-  <script type="text/javascript" src="js/platform.js"></script>
-  <script type="text/javascript">
+  <link rel="shortcut icon" href="img/favicon.ico" type="image/CanvasObject-icon" />
+  <script type="application/javascript" src="bootstrap/jquery.min.js"></script>
+  <script type="application/javascript" src="js/platform.js"></script>
+  <script type="application/javascript">
       $(function () {
           if ("${param.user}" === "") {
-              // 页面加载时首次刷新
-              fetchRepositories(false, "Anonymous");
-              // 每15秒刷新一次仓库列表
-              setInterval(fetchRepositories, 15000, false, "Anonymous");
+              // 加载时刷新
+              fetchComments("Anonymous");
+              // 每15秒自动刷新
+              setInterval(fetchComments, 15000, "Anonymous");
           } else {
-              fetchRepositories(false, "${param.user}");
-              setInterval(fetchRepositories, 15000, false, "${param.user}");
+              fetchComments("${param.user}");
+              setInterval(fetchComments, 15000, "${param.user}");
           }
       });
   </script>
   <%
     request.setCharacterEncoding("UTF-8");
     response.setCharacterEncoding("UTF-8");
+    response.setContentType("text/html; charset=UTF-8");
   %>
-  <c:choose> <c:when test="${param.user eq null}">
-    <title id="username">公共仓库 - 佛大云服务</title>
+  <c:choose> <c:when test="${param.user == null}">
+    <title id="username">评论区 - 佛大云服务</title>
   </c:when> <c:otherwise>
     <title id="username">${param.user} - 佛大云服务</title>
   </c:otherwise> </c:choose>
+  <style type="text/css">
+    .left {
+      width: fit-content;
+      border: unset;
+      border-radius: unset;
+      margin: auto;
+    }
+  </style>
 </head>
 
 <body>
@@ -108,16 +124,16 @@
       </div>
     </header>
     <div class="mainContent">
-      <h1>仓库列表</h1>
+      <h1>评论列表</h1>
       <div class="comments">
         <!-- 确认用户已经登录成功 -->
         <c:if test="${certificate.verified && !'Anonymous'.equals(certificate.username)}">
           <div class="searchBar" style="text-align: right;">
-            <a class="newRepository" href="private/newRepo.jsp">上传</a>
+            <a class="newRepository" href="private/newComments.jsp">新建</a>
           </div>
         </c:if>
         <table id="repoTable">
-          <tbody id="repositories"></tbody>
+          <tbody id="comments"></tbody>
         </table>
       </div>
     </div>
@@ -125,7 +141,7 @@
   <footer>
     <div>
       Powered by
-      <a href="https://github.com/Dragon1573/">@Dragon1573</a>
+      <a href="https://github.com/Dragon1573">@Dragon1573</a>
     </div>
   </footer>
 </body>

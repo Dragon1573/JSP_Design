@@ -23,6 +23,9 @@
     <jsp-property-group>
       <!-- URL匹配模式 -->
       <url-pattern>*.html</url-pattern>
+      <url-pattern>*.jsp</url-pattern>
+      <url-pattern>*.xml</url-pattern>
+      <url-pattern>*.java</url-pattern>
       <!-- 文件编码 -->
       <page-encoding>UTF-8</page-encoding>
     </jsp-property-group>

@@ -173,30 +173,35 @@ function checkUser(username) {
 /**
  * 刷新评论
  */
-function fetchComments() {
+function fetchComments(username) {
     $.ajax({
-        url: "/JSP_Design/sync?username=" + $("title#username")[0].text,
+        url: "/JSP_Design/sync",
         type: "GET",
         dataType: "json",
+        data: {"username": username},
 
         success: function (response) {
             let context = "";
 
             // 遍历数组元素
             $.each(response, function (k) {
-                context += "<tr><td class='left'>" + response[k]["SENDER"] + "：";
-                if (response[k]["DETAILS"].length > 30) {
-                    context += response[k]["DETAILS"].substr(0, 30) + "……";
+                context += "<tr><td class='left'><a href='details.jsp?timestamp=" +
+                    response[k]["DATETIME"] +
+                    "'>";
+                context += response[k]["SENDER"] + "：";
+                if (response[k]["TITLE"].length > 30) {
+                    context += response[k]["TITLE"].substr(0, 30) + "……";
                 } else {
-                    context += response[k]["DETAILS"];
+                    context += response[k]["TITLE"];
                 }
-                context += "</td><td style='float: right;'>" + response[k]["DATETIME"] + "</td></tr>";
+                context += "</a></td>";
+                context += "<td style='float: right;'>" + response[k]["DATETIME"] + "</td></tr>";
             });
 
             // 空评论过滤
             if (context === "") {
                 context = "<tr><td colspan='3' style='font-size: large'>" +
-                    "【系统消息】未获取到任何评论！" +
+                    "<span class='warning'>【系统消息】未获取到任何评论！</span>" +
                     "</td></tr>";
             }
 
@@ -213,11 +218,10 @@ function fetchComments() {
  * 发送评论
  *
  * @param username 用户名
+ * @param title
+ * @param content
  */
-function sendComments(username) {
-    // 获取评论内容
-    let content = $("textarea#sender").val();
-
+function sendComments(username, title, content) {
     if (content === "" || username === "Anonymous") {
         alert("评论内容不能为空！");
         return;
@@ -229,18 +233,19 @@ function sendComments(username) {
         type: "POST",
         dataType: "json",
         data: {
-            "username": username,
-            "content": content
+            "user": username,
+            "title": title,
+            "details": content
         },
 
         success: function (response) {
             alert((response["FLAG"] === true) ? "发送成功！" : "发送失败！");
-            fetchComments();
+            fetchComments("username");
             $("button#reset").click();
         },
         error: function () {
             alert("发送失败，请重试……");
-            fetchComments();
+            fetchComments("username");
         }
     });
 }
