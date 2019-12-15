@@ -148,6 +148,7 @@
                   commentForm.title.value,
                   commentForm.details.value
               );
+              window.location.href = "../comments.jsp";
           }
       </script>
     </div>

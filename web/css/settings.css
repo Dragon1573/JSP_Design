@@ -18,6 +18,7 @@ html, body {
 }
 
 header {
+    padding: 25px 0;
     text-align: left;
     display: flex;
 }
