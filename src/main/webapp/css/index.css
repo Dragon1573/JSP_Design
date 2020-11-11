@@ -1,0 +1,155 @@
+@charset "UTF-8";
+/* 首页外联样式表 */
+
+* {
+    margin: auto;
+    text-align: center;
+    align-self: center;
+}
+
+html, body {
+    height: 100%;
+    margin: auto;
+}
+
+.mainContainer {
+    margin: 0 auto;
+    font-size: smaller;
+    min-height: 100%;
+    box-sizing: border-box;
+    padding-bottom: 44px;
+}
+
+.mainContent > .leftContainer {
+    width: 50%;
+    float: left;
+}
+
+.mainContent > .rightContainer {
+    width: 50%;
+    float: right;
+}
+
+table {
+    width: 100%;
+}
+
+td.left {
+    text-align: left;
+}
+
+div.comments {
+    margin: 10px;
+}
+
+div#comments-div {
+    margin: 25px 10px;
+}
+
+label {
+    width: 100%;
+    float: left;
+    text-align: left;
+}
+
+textarea.comments {
+    resize: vertical;
+    text-align: left;
+    width: 98%;
+    height: 10em;
+}
+
+header {
+    text-align: left;
+    display: flex;
+    padding-top: 25px;
+    padding-bottom: 50px;
+}
+
+header > div {
+    color: black;
+}
+
+header > div > a {
+    text-align: left;
+}
+
+div#blank {
+    width: 50%;
+    text-align: left;
+}
+
+table#navigator {
+    width: auto;
+    margin: 0;
+    font-size: large;
+    font-family: "华文琥珀", "黑体", sans-serif;
+}
+
+table#navigator td {
+    width: 100px;
+}
+
+table#navigator a {
+    text-decoration: none;
+    color: black;
+}
+
+div#profile {
+    float: right;
+}
+
+details {
+    font-family: "黑体", sans-serif;
+}
+
+.menu {
+    border: 1px solid gray;
+    border-radius: 10px;
+    display: block;
+    padding: 10px;
+    background-clip: padding-box;
+    box-shadow: 0 5px 15px rgba(27, 31, 35, 0.15);
+    position: absolute;
+    left: auto;
+    right: 10px;
+    background-color: white;
+}
+
+.menu * {
+    text-align: left;
+}
+
+.line {
+    border-top: 1px solid gray;
+    display: block;
+    height: 0;
+    margin: 10px 0;
+}
+
+footer {
+    background-color: black;
+    color: white;
+    position: relative;
+    width: 100%;
+    clear: both;
+    font-size: larger;
+    height: 44px;
+    margin-top: -44px;
+}
+
+footer div {
+    padding: 10px 0;
+    font-size: larger;
+    font-family: "华文琥珀", "微软雅黑", "黑体", serif;
+}
+
+footer a {
+    color: white;
+    text-decoration: none;
+}
+
+footer a:hover {
+    color: white;
+    text-decoration: none;
+}

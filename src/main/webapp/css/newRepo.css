@@ -1,0 +1,27 @@
+div.createRepository {
+    width: 1000px;
+    font-size: larger;
+    padding: 5px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+div.fill-box {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: 500px;
+    text-align: left;
+}
+
+label {
+    width: fit-content;
+    float: none;
+    font-size: larger;
+    padding: 5px;
+}
+
+input {
+    font-size: larger;
+    padding: 5px;
+    text-align: left;
+}

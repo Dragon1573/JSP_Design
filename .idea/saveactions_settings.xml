@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SaveActionSettings">
+    <option name="actions">
+      <set>
+        <option value="activate" />
+        <option value="activateOnBatch" />
+        <option value="organizeImports" />
+        <option value="reformat" />
+        <option value="customUnqualifiedStaticMemberAccess" />
+        <option value="missingOverrideAnnotation" />
+        <option value="generateSerialVersionUID" />
+        <option value="unnecessaryThis" />
+        <option value="unnecessaryFinalOnLocalVariableOrParameter" />
+        <option value="explicitTypeCanBeDiamond" />
+        <option value="suppressAnnotation" />
+        <option value="unnecessarySemicolon" />
+        <option value="accessCanBeTightened" />
+      </set>
+    </option>
+    <option name="configurationPath" value="" />
+  </component>
+</project>

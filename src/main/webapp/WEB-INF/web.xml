@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 网页应用程序配置 -->
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd" id="WebApp_ID" version="4.0">
+  <!-- 项目显示名 -->
+  <display-name>JSP_Design</display-name>
+
+  <!-- 目录URL关联列表 -->
+  <welcome-file-list>
+    <!-- 目录主文件 -->
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+
+  <!-- 自定义错误页面 -->
+  <error-page>
+    <!-- 转发地址 -->
+    <location>/error.jsp</location>
+  </error-page>
+
+  <!-- JSP配置 -->
+  <jsp-config>
+    <!-- JSP属性组 -->
+    <jsp-property-group>
+      <!-- URL匹配模式 -->
+      <url-pattern>*.html</url-pattern>
+      <url-pattern>*.jsp</url-pattern>
+      <url-pattern>*.xml</url-pattern>
+      <url-pattern>*.java</url-pattern>
+      <!-- 文件编码 -->
+      <page-encoding>UTF-8</page-encoding>
+    </jsp-property-group>
+  </jsp-config>
+</web-app>

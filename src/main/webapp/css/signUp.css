@@ -1,0 +1,58 @@
+@charset "UTF-8";
+/* 注册界面外联样式表 */
+
+* {
+    text-align: center;
+    margin: auto;
+}
+
+body {
+    background: url("../img/background.jpg");
+    padding: 10px 0;
+}
+
+.signUpFrame {
+    margin: auto auto;
+    width: 25%;
+    border-color: gray;
+    border-style: solid;
+    border-radius: 10px;
+    border-width: 1px;
+    padding: 25px 10px;
+    background-color: cornsilk;
+}
+
+.profile {
+    text-align: left;
+    margin-top: 25px;
+}
+
+.profile * {
+    text-align: left;
+}
+
+input {
+    width: 100%;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #d1d5da;
+    border-radius: 5px;
+}
+
+p.error {
+    color: red;
+    font-weight: bold;
+}
+
+button {
+    border-radius: 10px;
+    background-color: #279f43;
+    font-weight: bolder;
+    font-size: large;
+    padding: 10px;
+    color: white;
+    text-align: center;
+    width: 100%;
+}

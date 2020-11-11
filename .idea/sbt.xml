@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ScalaSbtSettings">
+    <option name="customLauncherEnabled" value="true" />
+    <option name="customLauncherPath" value="C:\ProgramData\scoop\apps\sbt\current\bin\sbt-launch.jar" />
+    <option name="customVMEnabled" value="true" />
+    <option name="customVMPath" value="D:/Program_Files_(x64)/Java" />
+    <option name="maximumHeapSize" value="1024" />
+    <option name="vmParameters" value="-Dfile.encoding=GBK" />
+  </component>
+</project>
