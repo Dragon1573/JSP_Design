@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Context>
+  <!-- 数据库连接池配置信息 -->
+  <Resource name="jdbc/sqlite3" auth="Container" type="javax.sql.DataSource"
+            maxActive="25" maxIdle="5" maxWait="10000" driverClassName="org.sqlite.JDBC"
+            url="jdbc:sqlite::resource:database.sqlite" />
+</Context>

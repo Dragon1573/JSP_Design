@@ -1,8 +1,10 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Tomcat 9.0.36 (Local)" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat 9.0.36 (Local)" ALTERNATIVE_JRE_ENABLED="false" nameIsGenerated="true">
+    <option name="OPEN_IN_BROWSER" value="false" />
+    <option name="COMMON_VM_ARGUMENTS" value="-Dfile.encoding=UTF-8" />
     <option name="UPDATING_POLICY" value="redeploy-artifacts" />
     <deployment>
-      <artifact name="jsp-design-maven:war exploded">
+      <artifact name="JSP-Design:war">
         <settings>
           <option name="CONTEXT_PATH" value="/JSP_Design" />
         </settings>
@@ -12,7 +14,7 @@
       <option name="BASE_DIRECTORY_NAME" value="未命名_jsp-design-maven_2" />
       <option name="HTTP_PORT" value="80" />
     </server-settings>
-    <log_file alias="Tomcat Localhost Log" path="%IDEA_RUN:CATALINA_BASE%/logs/localhost.*" skipped="false" />
+    <log_file checked="false" alias="Tomcat Localhost Log" path="%IDEA_RUN:CATALINA_BASE%/logs/localhost.*" skipped="false" />
     <log_file checked="false" alias="Tomcat Catalina Log" path="%IDEA_RUN:CATALINA_BASE%/logs/catalina.*" skipped="false" />
     <predefined_log_file id="Tomcat Manager" />
     <predefined_log_file id="Tomcat Host Manager" />
@@ -67,7 +69,7 @@
     </ConfigurationWrapper>
     <method v="2">
       <option name="BuildArtifacts" enabled="true">
-        <artifact name="jsp-design-maven:war exploded" />
+        <artifact name="JSP-Design:war" />
       </option>
     </method>
   </configuration>

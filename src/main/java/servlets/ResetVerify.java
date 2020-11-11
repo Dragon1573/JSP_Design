@@ -1,7 +1,6 @@
 package servlets;
 
 import java.io.IOException;
-
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -13,7 +12,6 @@ import utils.Connector;
 
 /**
  * @author Dragon1573
- * @date 2019/7/12
  */
 @WebServlet(name = "ResetVerify", urlPatterns = {"/forget"})
 public class ResetVerify extends HttpServlet {

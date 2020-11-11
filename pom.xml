@@ -111,6 +111,9 @@
         </plugin>
         <plugin>
           <artifactId>maven-war-plugin</artifactId>
+          <configuration>
+            <warName>JSP_Design</warName>
+          </configuration>
           <version>3.2.2</version>
         </plugin>
         <plugin>
