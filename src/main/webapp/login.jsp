@@ -1,14 +1,20 @@
 <!DOCTYPE html>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<jsp:useBean id="certificate" class="entities.UserInfo" scope="session"></jsp:useBean>
+<jsp:useBean id="certificate" class="entities.UserInfo" scope="session" />
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" type="text/css" href="css/login.css" />
     <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" />
     <title>用户登录</title>
-    <script type="application/javascript" src="js/encrypt.js"></script>
+    <script type="text/javascript" src="bootstrap/jquery.min.js"></script>
+    <script type="text/javascript" src="bootstrap/md5.min.js"></script>
+    <script type="text/javascript">
+      /* @formatter:off */
+      function e() {let d = $('form'), i = d.find('#password'), n = d.find('#confirm'), o = b64_hmac_md5(i, i);i.value = o, void 0 !== n && (n.value = o), d.submit()}
+      /* @formatter:on */
+    </script>
   </head>
   <body>
     <header>
@@ -24,7 +30,7 @@
         <c:if test="${!certificate.verified}">
           <div style="color: red; font-weight: bold;">登陆失败：用户名或密码错误！</div>
         </c:if>
-        <input type="submit" id="login" value="登录" onclick="encryptPassword()" />
+        <input type="submit" id="login" value="登录" onclick="e()" />
       </div>
     </form>
     <div class="signUpFrame">

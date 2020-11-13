@@ -1,7 +1,7 @@
 package servlets.hidden;
 
 import java.io.IOException;
-import javax.servlet.ServletException;
+import java.io.PrintWriter;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,17 +20,20 @@ public class Remove extends HttpServlet {
     @Override
     protected void doPost(
         HttpServletRequest request, HttpServletResponse response
-    ) throws ServletException, IOException {
+    )
+        throws IOException {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
 
-        Connector connector = new Connector();
-        JSONObject object = new JSONObject();
-        object.put(
-            "SUCCESS",
-            connector.deleteComments(request.getParameter("timestamp"))
-        );
-        response.sendRedirect("comments.jsp?user=" + request.getParameter("user"));
+        // 移除评论
+        boolean isRemoved = Connector.deleteComments(request.getParameter("timestamp"));
+
+        // 输出
+        try (PrintWriter writer = response.getWriter()) {
+            JSONObject object = new JSONObject(1);
+            object.put("SUCCESS", isRemoved);
+            writer.println(JSON.toJSONString(object));
+        }
     }
 }

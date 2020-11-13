@@ -1,7 +1,6 @@
 package servlets.hidden;
 
 import java.io.IOException;
-
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -10,13 +9,13 @@ import javax.servlet.http.HttpSession;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+
 import entities.UserInfo;
 import utils.Connector;
 import utils.Md5Util;
 
 /**
  * @author Dragon1573
- * @date 2019/7/23
  */
 @WebServlet(name = "Settings", urlPatterns = {"/settings"})
 public class Settings extends HttpServlet {
@@ -36,30 +35,29 @@ public class Settings extends HttpServlet {
         String username = info.getUsername();
 
         // 变更数据库
-        Connector connector = new Connector();
         boolean success = false;
         switch (fields) {
             case "Username":
-                success = connector.changeUsername(news, username);
+                success = Connector.changeUsername(news, username);
                 info.setUsername(news);
                 break;
 
             case "Password":
                 String newPass = Md5Util.encrypt(news);
                 String oldPass = Md5Util.encrypt(old);
-                success = connector.changePassword(username, newPass, oldPass);
+                success = Connector.changePassword(username, newPass, oldPass);
                 break;
 
             case "Phone":
-                success = connector.changePhone(username, news);
+                success = Connector.changePhone(username, news);
                 break;
 
             case "Protection":
-                success = connector.changeProtection(username, news, old);
+                success = Connector.changeProtection(username, news, old);
                 break;
 
             case "Email":
-                success = connector.changeEmail(username, news);
+                success = Connector.changeEmail(username, news);
                 break;
 
             default:

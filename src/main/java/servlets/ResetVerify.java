@@ -22,10 +22,8 @@ public class ResetVerify extends HttpServlet {
         String username = request.getParameter("username");
         String answer = request.getParameter("answer");
 
-        Connector connector = new Connector();
-
         HttpSession session = request.getSession();
-        if (connector.resetVerify(username, answer)) {
+        if (Connector.resetVerify(username, answer)) {
             UserInfo info = (UserInfo)session.getAttribute("certificate");
             info.setVerified(true);
             info.setUsername(username);

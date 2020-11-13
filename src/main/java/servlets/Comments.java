@@ -2,8 +2,6 @@ package servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -43,33 +41,11 @@ public class Comments extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
 
-        // 获取用户名
-        String username = request.getParameter("username");
-
-        // 获取评论
-        Connector connector = new Connector();
-        ResultSet resultSet = connector.fetchComments(username);
-
-        // 生成JSON数据表
-        JSONArray vector = new JSONArray();
-        try {
-            while (resultSet != null && resultSet.next()) {
-                JSONObject object = new JSONObject();
-                object.put("SENDER", resultSet.getString("Sender"));
-                object.put("TITLE", resultSet.getString("Title"));
-                object.put("DETAILS", resultSet.getString("Details"));
-                // 将SQL Server中的时间转换为字符串
-                object.put("DATETIME", resultSet.getString("DateTime"));
-                // 将单个JSON数据加入表中
-                vector.add(object);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
         // 输出JSON字符串
         try (PrintWriter writer = response.getWriter()) {
-            writer.println(JSON.toJSONString(vector));
+            String username = request.getParameter("username");
+            JSONArray array = Connector.fetchComments(username);
+            writer.println(JSON.toJSONString(array));
         }
     }
 
@@ -97,8 +73,7 @@ public class Comments extends HttpServlet {
         String comments = request.getParameter("details");
 
         // 访问数据库
-        Connector connector = new Connector();
-        boolean isSaved = connector.sendComments(username, title, comments);
+        boolean isSaved = Connector.sendComments(username, title, comments);
 
         // 转换为JSON字符串
         JSONObject jsonObject = new JSONObject();

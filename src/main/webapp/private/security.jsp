@@ -16,7 +16,11 @@
     <link rel="stylesheet" href="../css/settings.css" />
     <script type="text/javascript" src="${path}/bootstrap/jquery.min.js"></script>
     <script type="text/javascript" src="${path}/js/platform.js"></script>
-    <script type="application/javascript" src="../js/encrypt.js"></script>
+    <script type="text/javascript">
+      /* @formatter:off */
+      function e() {let d = $('form'), i = d.find('#password'), n = d.find('#confirm'), o = b64_hmac_md5(i, i);i.value = o, void 0 !== n && (n.value = o), d.submit()}
+      /* @formatter:on */
+    </script>
     <title>用户设置</title>
   </head>
   <body>

@@ -3,7 +3,6 @@ package servlets;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,7 +17,6 @@ import utils.Connector;
  * Servlet：注册
  *
  * @author Dragon1573
- * @date 2019/7/7
  */
 @WebServlet(name = "SignUp", urlPatterns = {"/signUp"})
 public class SignUp extends HttpServlet {
@@ -31,7 +29,8 @@ public class SignUp extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+        throws IOException, ServletException {
         // 设置请求编码格式
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
@@ -54,8 +53,7 @@ public class SignUp extends HttpServlet {
         profile.put("Answer", request.getParameter("answer"));
 
         // 用户入库
-        Connector connector = new Connector();
-        int effect = connector.signUp(profile);
+        int effect = Connector.signUp(profile);
         if (effect <= 0) {
             // 用户信息未存入数据库
             request.setAttribute("error", "SignUpFailedError");

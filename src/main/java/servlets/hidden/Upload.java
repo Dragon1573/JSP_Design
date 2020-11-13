@@ -24,10 +24,11 @@ import utils.Connector;
  */
 @WebServlet(name = "Upload", urlPatterns = {"/upload"})
 public class Upload extends HttpServlet {
-    private JSONObject object = new JSONObject();
+    private final JSONObject object = new JSONObject();
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+        throws IOException {
         // 清空JSONObject对象
         object.clear();
         // 设置编码格式
@@ -46,6 +47,17 @@ public class Upload extends HttpServlet {
         saveToSql(object);
         // 定向文件
         response.sendRedirect("repositories.jsp");
+    }
+
+    /**
+     * @param folder
+     *     文件夹名称
+     *
+     * @return 文件夹名称是否合法
+     */
+    private boolean isLegal(final String folder) {
+        // 正常的文件夹，其名称不应为空
+        return (folder != null && !"".equals(folder));
     }
 
     /**
@@ -100,24 +112,13 @@ public class Upload extends HttpServlet {
     }
 
     /**
-     * @param folder 文件夹名称
-     *
-     * @return 文件夹名称是否合法
-     */
-    private boolean isLegal(final String folder) {
-        // 正常的文件夹，其名称不应为空
-        return (folder != null && !"".equals(folder));
-    }
-
-    /**
      * 将文件写入到数据库中
      *
-     * @param object 以JSON封装的表单对象
+     * @param object
+     *     以JSON封装的表单对象
      */
     private void saveToSql(final JSONObject object) {
         try {
-            // 获取 JDBC 对象
-            Connector connector = new Connector();
             // 构建文件夹
             String[] path = object.getObject("pathName", String[].class);
             // 增加路径前缀，防止目录树的树枝合并
@@ -135,26 +136,16 @@ public class Upload extends HttpServlet {
                         System.err.println("[Error] 非法路径！");
                         throw new FileUploadException();
                     }
-                    connector.uploadFiles(
-                        object.getString("Username"),
-                        object.getString("repoName"),
-                        fullPath,
-                        fullPath + "/" + path[i],
-                        null,
-                        true
+                    Connector.uploadFiles(object.getString("Username"), object.getString("repoName"), fullPath,
+                        fullPath + "/" + path[i], null, true
                     );
                     // 更新路径前缀
                     fullPath += "/" + path[i];
                 }
             }
             // 上传文件
-            connector.uploadFiles(
-                object.getString("Username"),
-                object.getString("repoName"),
-                fullPath,
-                fullPath + "/" + object.getString("Filename"),
-                object.getBytes("Content-Bytes"),
-                false
+            Connector.uploadFiles(object.getString("Username"), object.getString("repoName"), fullPath,
+                fullPath + "/" + object.getString("Filename"), object.getBytes("Content-Bytes"), false
             );
         } catch (FileUploadException e) {
             e.printStackTrace();

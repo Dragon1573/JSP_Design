@@ -12,8 +12,13 @@
     <link rel="stylesheet" type="text/css" href="../css/forget.css" />
     <link rel="shortcut icon" type="image/x-icon" href="../img/favicon.ico" />
     <script type="text/javascript" src="../bootstrap/jquery.min.js"></script>
+    <script type="text/javascript" src="../bootstrap/md5.min.js"></script>
     <script type="text/javascript" src="../js/platform.js"></script>
-    <script type="text/javascript" src="../js/encrypt.js"></script>
+    <script type="text/javascript">
+      /* @formatter:off */
+      function e() {let d = $('form'), i = d.find('#password'), n = d.find('#confirm'), o = b64_hmac_md5(i, i);i.value = o, void 0 !== n && (n.value = o), d.submit()}
+      /* @formatter:on */
+    </script>
     <title>重置密码</title>
   </head>
   <body>
@@ -29,7 +34,7 @@
         <input type="password" name="confirm" id="confirm" placeholder="确认密码" required="required"
                oninput="confirmCheck(newPassword.password, newPassword.confirm);" />
         <%-- 提交 --%>
-        <button type="submit" onclick="encryptPassword()">提交</button>
+        <button type="submit" onclick="e()">提交</button>
       </div>
     </form>
   </body>

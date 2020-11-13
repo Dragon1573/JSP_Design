@@ -20,6 +20,7 @@ import com.alibaba.fastjson.JSONObject;
  */
 public class Connector implements Serializable {
     private static final long serialVersionUID = -5284530935717575965L;
+    private static Connection connection = null;
     private static DataSource source = null;
 
     static {
@@ -33,6 +34,11 @@ public class Connector implements Serializable {
     }
 
     /**
+     * 私有类方法，禁止其他方法创建对象
+     */
+    private Connector() {}
+
+    /**
      * 修改电子邮箱
      *
      * @param username
@@ -44,17 +50,17 @@ public class Connector implements Serializable {
      */
     public static boolean changeEmail(String username, String mail) {
         boolean success = false;
-        try {
-            PreparedStatement statement = Objects.requireNonNull(getConnection()).prepareStatement(
-                "UPDATE Users SET Email = ? WHERE Username = ?"
-            );
+        try (
+            PreparedStatement statement = Objects.requireNonNull(connect()).prepareStatement(
+                "UPDATE Users SET Email = ? WHERE Username = ?")
+        ) {
             statement.setString(1, mail);
             statement.setString(2, username);
             success = (statement.executeUpdate() > 0);
-            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        disconnect();
         return success;
     }
 
@@ -72,18 +78,18 @@ public class Connector implements Serializable {
      */
     public static boolean changePassword(String username, String news, String old) {
         boolean success = false;
-        try {
-            PreparedStatement statement = Objects.requireNonNull(getConnection()).prepareStatement(
-                "UPDATE Users SET Password = ? WHERE (Username = ? AND Password = ?)"
-            );
+        try (
+            PreparedStatement statement = Objects.requireNonNull(connect()).prepareStatement(
+                "UPDATE Users SET Password = ? WHERE (Username = ? AND Password = ?)")
+        ) {
             statement.setString(1, news);
             statement.setString(2, username);
             statement.setString(3, old);
             success = (statement.executeUpdate() > 0);
-            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        disconnect();
         return success;
     }
 
@@ -99,17 +105,17 @@ public class Connector implements Serializable {
      */
     public static boolean changePhone(String username, String news) {
         boolean success = false;
-        try {
-            PreparedStatement statement = Objects.requireNonNull(getConnection()).prepareStatement(
-                "UPDATE Users SET Phone = ? WHERE Username = ?"
-            );
+        try (
+            PreparedStatement statement = Objects.requireNonNull(connect()).prepareStatement(
+                "UPDATE Users SET Phone = ? WHERE Username = ?")
+        ) {
             statement.setString(1, news);
             statement.setString(2, username);
             success = (statement.executeUpdate() > 0);
-            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        disconnect();
         return success;
     }
 
@@ -127,18 +133,18 @@ public class Connector implements Serializable {
      */
     public static boolean changeProtection(String username, String question, String answer) {
         boolean success = false;
-        try {
-            PreparedStatement statement = Objects.requireNonNull(getConnection()).prepareStatement(
-                "UPDATE Users SET Question = ?, Answer = ? WHERE Username = ?"
-            );
+        try (
+            PreparedStatement statement = Objects.requireNonNull(connect()).prepareStatement(
+                "UPDATE Users SET Question = ?, Answer = ? WHERE Username = ?")
+        ) {
             statement.setString(1, question);
             statement.setString(2, answer);
             statement.setString(3, username);
             success = (statement.executeUpdate() > 0);
-            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        disconnect();
         return success;
     }
 
@@ -154,18 +160,34 @@ public class Connector implements Serializable {
      */
     public static boolean changeUsername(String news, String old) {
         boolean success = false;
-        try {
-            PreparedStatement statement = Objects.requireNonNull(getConnection()).prepareStatement(
-                "UPDATE Users SET Username = ? WHERE Username = ?"
-            );
+        try (
+            PreparedStatement statement = Objects.requireNonNull(connect()).prepareStatement(
+                "UPDATE Users SET Username = ? WHERE Username = ?")
+        ) {
             statement.setString(1, news);
             statement.setString(2, old);
             success = (statement.executeUpdate() > 0);
-            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        disconnect();
         return success;
+    }
+
+    /**
+     * 从连接池获取数据库连接
+     *
+     * @return 数据库连接
+     */
+    private synchronized static Connection connect() {
+        if (connection == null) {
+            try {
+                connection = source.getConnection();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return connection;
     }
 
     /**
@@ -177,9 +199,8 @@ public class Connector implements Serializable {
     public static boolean deleteComments(String timestamp) {
         boolean isDeleted = false;
         try {
-            PreparedStatement statement = Objects.requireNonNull(getConnection()).prepareStatement(
-                "DELETE FROM Comments WHERE DateTime = ?"
-            );
+            PreparedStatement statement = Objects.requireNonNull(connect()).prepareStatement(
+                "DELETE FROM Comments WHERE DateTime = ?");
             statement.setString(1, timestamp);
             isDeleted = (statement.executeUpdate() > 0);
             statement.close();
@@ -187,20 +208,18 @@ public class Connector implements Serializable {
             System.err.println("[ERROR] 记录删除失败！");
             e.printStackTrace();
         }
+        disconnect();
         return isDeleted;
     }
 
     /**
      * 递归删除仓库目录
      */
-    public static boolean deleteFolder(
-        String username, String repository, String path
-    ) {
+    public static boolean deleteFolder(String username, String repository, String path) {
         boolean success = false;
         try {
-            PreparedStatement statement = Objects.requireNonNull(getConnection()).prepareStatement(
-                "DELETE FROM Repositories WHERE Username = ? AND Repository = ? AND Filename LIKE ?"
-            );
+            PreparedStatement statement = Objects.requireNonNull(connect()).prepareStatement(
+                "DELETE FROM Repositories WHERE Username = ? AND Repository = ? AND Filename LIKE ?");
             statement.setString(1, username);
             statement.setString(2, repository);
             statement.setString(3, path + "%");
@@ -210,6 +229,7 @@ public class Connector implements Serializable {
             System.err.println("[ERROR] 目录递归删除失败！");
             e.printStackTrace();
         }
+        disconnect();
         return success;
     }
 
@@ -226,9 +246,8 @@ public class Connector implements Serializable {
     public static boolean deleteRepositories(String username, String repository) {
         boolean success = false;
         try {
-            PreparedStatement statement = Objects.requireNonNull(getConnection()).prepareStatement(
-                "DELETE FROM Repositories WHERE Username = ? AND Repository = ?"
-            );
+            PreparedStatement statement = Objects.requireNonNull(connect()).prepareStatement(
+                "DELETE FROM Repositories WHERE Username = ? AND Repository = ?");
             statement.setString(1, username);
             statement.setString(2, repository);
             success = (statement.executeUpdate() > 0);
@@ -236,7 +255,21 @@ public class Connector implements Serializable {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        disconnect();
         return success;
+    }
+
+    /**
+     * 断开数据库连接，将连接归还到连接池
+     */
+    private synchronized static void disconnect() {
+        if (connection != null) {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -247,25 +280,41 @@ public class Connector implements Serializable {
      *
      * @return 用户评论
      */
-    public static ResultSet fetchComments(String username) {
+    public static JSONArray fetchComments(String username) {
+        // 初始化JSON数据表
+        JSONArray vector = new JSONArray();
+        // 预制初始名
         final String anonymous = "Anonymous";
-        ResultSet resultSet = null;
-        try {
-            Connection connection = getConnection();
+
+        String sql;
+        if (!anonymous.equals(username)) {
+            sql = "SELECT * FROM Comments WHERE Sender = ?";
+        } else {
+            sql = "SELECT * FROM Comments";
+        }
+
+        try (PreparedStatement statement = Objects.requireNonNull(connect()).prepareStatement(sql)) {
             if (!anonymous.equals(username)) {
-                PreparedStatement statement = Objects.requireNonNull(connection).prepareStatement(
-                    "SELECT * FROM Comments WHERE Sender = ?"
-                );
                 statement.setString(1, username);
-                resultSet = statement.executeQuery();
-            } else {
-                Statement statement = Objects.requireNonNull(connection).createStatement();
-                resultSet = statement.executeQuery("SELECT * FROM Comments");
+            }
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet != null && resultSet.next()) {
+                    JSONObject object = new JSONObject();
+                    object.put("SENDER", resultSet.getString("Sender"));
+                    object.put("TITLE", resultSet.getString("Title"));
+                    object.put("DETAILS", resultSet.getString("Details"));
+                    // 将SQL Server中的时间转换为字符串
+                    object.put("DATETIME", resultSet.getString("DateTime"));
+                    // 将单个JSON数据加入表中
+                    vector.add(object);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return resultSet;
+
+        disconnect();
+        return vector;
     }
 
     /**
@@ -276,31 +325,33 @@ public class Connector implements Serializable {
      *
      * @return 结果集
      */
-    public static ResultSet fetchRepositories(String username) {
+    public static JSONArray fetchRepositories(String username) {
         String[] anonymous = {"佛大云服务", "Anonymous"};
-        ResultSet resultSet = null;
-        PreparedStatement statement;
+        String sql;
+        JSONArray array = new JSONArray();
 
-        try {
-            Connection connection = getConnection();
-            if (Arrays.asList(anonymous).contains(username)) {
-                // 匿名用户
-                statement = Objects.requireNonNull(connection).prepareStatement(
-                    "SELECT Username, Repository FROM Repositories GROUP BY Username, Repository"
-                );
-            } else {
-                // 登录用户
-                statement = Objects.requireNonNull(connection).prepareStatement(
-                    "SELECT Username, Repository FROM Repositories "
-                    + "WHERE Username = ? GROUP BY Username, Repository"
-                );
+        // 匿名测试
+        boolean flag = Arrays.asList(anonymous).contains(username);
+        sql = flag ? ("SELECT Username, Repository FROM Repositories GROUP BY Username, Repository")
+                   : ("SELECT Username, Repository FROM Repositories WHERE Username = ? GROUP BY Username, Repository");
+
+        try (PreparedStatement statement = Objects.requireNonNull(connect()).prepareStatement(sql)) {
+            if (!flag) {
                 statement.setString(1, username);
             }
-            resultSet = statement.executeQuery();
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet != null && resultSet.next()) {
+                    JSONObject object = new JSONObject();
+                    object.put("USERNAME", resultSet.getString("Username"));
+                    object.put("REPOSITORY", resultSet.getString("Repository"));
+                    array.add(object);
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return resultSet;
+        disconnect();
+        return array;
     }
 
     /**
@@ -312,9 +363,8 @@ public class Connector implements Serializable {
     public static JSONObject getComments(String timeStamp) {
         JSONObject object = new JSONObject();
         try {
-            PreparedStatement statement = Objects.requireNonNull(getConnection()).prepareStatement(
-                "SELECT * FROM Comments WHERE DateTime = ?"
-            );
+            PreparedStatement statement = Objects.requireNonNull(connect()).prepareStatement(
+                "SELECT * FROM Comments WHERE DateTime = ?");
             statement.setString(1, timeStamp);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet != null && resultSet.next()) {
@@ -327,23 +377,8 @@ public class Connector implements Serializable {
             System.err.println("[ERROR] 数据库请求异常！");
             e.printStackTrace();
         }
+        disconnect();
         return object;
-    }
-
-    private static Connection getConnection() {
-        try {
-            // 初始化上下文
-            return source.getConnection();
-        } catch (SQLException exception) {
-            switch (exception.getClass().getTypeName()) {
-                case "SQLException" -> System.err.println("[Error] 数据库连接异常！");
-                case "ClassNotFoundException" -> System.err.println("[Error] 未找到数据库驱动器！");
-                case "IOException" -> System.err.println("[Error] 配置文件读取错误！");
-                default -> System.err.println("[Error] 未知错误！");
-            }
-            exception.printStackTrace();
-            return null;
-        }
     }
 
     /**
@@ -358,14 +393,11 @@ public class Connector implements Serializable {
      *
      * @return 二进制文件内容
      */
-    public static byte[] getFiles(
-        String username, String repository, String filename
-    ) {
+    public static byte[] getFiles(String username, String repository, String filename) {
         byte[] content = null;
         try {
-            PreparedStatement statement = Objects.requireNonNull(getConnection()).prepareStatement(
-                "SELECT Details FROM Repositories WHERE Username = ? AND Repository = ? AND Filename = ?"
-            );
+            PreparedStatement statement = Objects.requireNonNull(connect()).prepareStatement(
+                "SELECT Details FROM Repositories WHERE Username = ? AND Repository = ? AND Filename = ?");
             statement.setString(1, username);
             statement.setString(2, repository);
             statement.setString(3, filename);
@@ -378,6 +410,7 @@ public class Connector implements Serializable {
             System.err.println("[Error] 文件读取异常！");
             e.printStackTrace();
         }
+        disconnect();
         return content;
     }
 
@@ -393,9 +426,8 @@ public class Connector implements Serializable {
         String question = null;
         try {
             // 执行SQL语句
-            PreparedStatement statement = Objects.requireNonNull(getConnection()).prepareStatement(
-                "SELECT Question FROM Users WHERE Username = ?"
-            );
+            PreparedStatement statement = Objects.requireNonNull(connect()).prepareStatement(
+                "SELECT Question FROM Users WHERE Username = ?");
             statement.setString(1, username);
             ResultSet resultSet = statement.executeQuery();
             // 提取密保问题
@@ -406,6 +438,7 @@ public class Connector implements Serializable {
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
+        disconnect();
         return question;
     }
 
@@ -419,14 +452,11 @@ public class Connector implements Serializable {
      * @param path
      *     相对路径名
      */
-    public static JSONArray listFiles(
-        String username, String repository, String path
-    ) {
+    public static JSONArray listFiles(String username, String repository, String path) {
         JSONArray folders = new JSONArray();
         try {
-            PreparedStatement statement = Objects.requireNonNull(getConnection()).prepareStatement(
-                "SELECT Filename,Folder FROM Repositories "
-                + "WHERE Username = ? AND Repository = ? AND Path = ? "
+            PreparedStatement statement = Objects.requireNonNull(connect()).prepareStatement(
+                "SELECT Filename,Folder FROM Repositories " + "WHERE Username = ? AND Repository = ? AND Path = ? "
                 + "GROUP BY Filename,Folder");
             statement.setString(1, username);
             statement.setString(2, repository);
@@ -443,6 +473,7 @@ public class Connector implements Serializable {
             System.err.println("[Error] 拉取文件列表异常！");
             e.printStackTrace();
         }
+        disconnect();
         return folders;
     }
 
@@ -451,24 +482,36 @@ public class Connector implements Serializable {
      *
      * @param username
      *     用户名
+     * @param password
+     *     密码
      *
-     * @return 受影响的行数
+     * @return 登录成功反馈标记
      */
-    public static ResultSet login(String username) {
-        ResultSet resultSet = null;
-        try {
-            PreparedStatement statement = Objects.requireNonNull(getConnection()).prepareStatement(
-                "SELECT Password FROM Users WHERE (Username = ? OR Phone = ? OR Email = ?)"
-            );
+    public static boolean login(String username, String password) {
+        boolean success = false;
+
+        try (
+            PreparedStatement statement = Objects.requireNonNull(connect()).prepareStatement(
+                "SELECT Password FROM Users WHERE (Username = ? OR Phone = ? OR Email = ?)")
+        ) {
             statement.setString(1, username);
             statement.setString(2, username);
             statement.setString(3, username);
-            resultSet = statement.executeQuery();
+
+            //查询数据库，进行身份校验
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet != null && resultSet.next()) {
+                    String s = resultSet.getString(1);
+                    success = s.equals(Md5Util.encrypt(password));
+                }
+            }
         } catch (SQLException exception) {
             System.err.println("错误：SQL语句异常！");
             exception.printStackTrace();
         }
-        return resultSet;
+
+        disconnect();
+        return success;
     }
 
     /**
@@ -484,9 +527,8 @@ public class Connector implements Serializable {
     public static boolean renameRepositories(String username, String newName, String oldName) {
         boolean success = false;
         try {
-            PreparedStatement statement = Objects.requireNonNull(getConnection()).prepareStatement(
-                "UPDATE Repositories SET Repository = ? WHERE (Username = ? AND Repository = ?)"
-            );
+            PreparedStatement statement = Objects.requireNonNull(connect()).prepareStatement(
+                "UPDATE Repositories SET Repository = ? WHERE (Username = ? AND Repository = ?)");
             statement.setString(1, newName);
             statement.setString(2, username);
             statement.setString(3, oldName);
@@ -495,6 +537,7 @@ public class Connector implements Serializable {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        disconnect();
         return success;
     }
 
@@ -506,9 +549,8 @@ public class Connector implements Serializable {
      */
     public static void reset(String username, String password) {
         try {
-            PreparedStatement statement = Objects.requireNonNull(getConnection()).prepareStatement(
-                "UPDATE Users SET Password = ? WHERE Username = ?"
-            );
+            PreparedStatement statement = Objects.requireNonNull(connect()).prepareStatement(
+                "UPDATE Users SET Password = ? WHERE Username = ?");
             statement.setString(1, Md5Util.encrypt(password));
             statement.setString(2, username);
             statement.executeUpdate();
@@ -516,6 +558,7 @@ public class Connector implements Serializable {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        disconnect();
     }
 
     /**
@@ -531,9 +574,8 @@ public class Connector implements Serializable {
     public static boolean resetVerify(String username, String answer) {
         boolean isPassed = false;
         try {
-            PreparedStatement statement = Objects.requireNonNull(getConnection()).prepareStatement(
-                "SELECT COUNT(*) AS Flag FROM Users WHERE Username = ? AND Answer = ?"
-            );
+            PreparedStatement statement = Objects.requireNonNull(connect()).prepareStatement(
+                "SELECT COUNT(*) AS Flag FROM Users WHERE Username = ? AND Answer = ?");
             statement.setString(1, username);
             statement.setString(2, answer);
             ResultSet resultSet = statement.executeQuery();
@@ -544,6 +586,7 @@ public class Connector implements Serializable {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        disconnect();
         return isPassed;
     }
 
@@ -557,15 +600,12 @@ public class Connector implements Serializable {
      *
      * @return boolean
      */
-    public static boolean sendComments(
-        String username, String title, String comments
-    ) {
+    public static boolean sendComments(String username, String title, String comments) {
         // 数据存入标记
         boolean isSaved = false;
         try {
-            PreparedStatement statement = Objects.requireNonNull(getConnection()).prepareStatement(
-                "INSERT INTO Comments VALUES (?, ?, ?, CURRENT_TIME)"
-            );
+            PreparedStatement statement = Objects.requireNonNull(connect()).prepareStatement(
+                "INSERT INTO Comments VALUES (?, ?, ?, CURRENT_TIME)");
             statement.setString(1, username);
             statement.setString(2, title);
             statement.setString(3, comments);
@@ -574,6 +614,7 @@ public class Connector implements Serializable {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        disconnect();
         return isSaved;
     }
 
@@ -586,10 +627,10 @@ public class Connector implements Serializable {
      * @return 受影响的行数
      */
     public static int signUp(HashMap<String, String> profile) {
-        try {
-            PreparedStatement statement = Objects.requireNonNull(getConnection()).prepareStatement(
-                "INSERT INTO Users VALUES (?, ?, ?, ?, ?, ?)"
-            );
+        try (
+            PreparedStatement statement = Objects.requireNonNull(connect()).prepareStatement(
+                "INSERT INTO Users VALUES (?, ?, ?, ?, ?, ?)")
+        ) {
             statement.setString(1, profile.get("Username"));
             statement.setString(2, Md5Util.encrypt(profile.get("Password")));
 
@@ -617,14 +658,13 @@ public class Connector implements Serializable {
             } else {
                 statement.setString(6, profile.get("Answer"));
             }
-            int affected = statement.executeUpdate();
-            statement.close();
-            return affected;
+            return statement.executeUpdate();
         } catch (SQLException exception) {
             System.err.println("错误：SQL语句异常！");
             exception.printStackTrace();
-            return 0;
         }
+        disconnect();
+        return 0;
     }
 
     /**
@@ -635,18 +675,24 @@ public class Connector implements Serializable {
      *
      * @return 受影响的行数
      */
-    public static ResultSet uniqueCheck(String username) {
-        try {
-            PreparedStatement statement = Objects.requireNonNull(getConnection()).prepareStatement(
-                "SELECT COUNT(*) AS Rows FROM Users WHERE Username = ?"
-            );
+    public static boolean uniqueCheck(String username) {
+        boolean isExists = false;
+        try (
+            PreparedStatement statement = Objects.requireNonNull(connect()).prepareStatement(
+                "SELECT COUNT(*) AS Rows FROM Users WHERE Username = ?")
+        ) {
             statement.setString(1, username);
-            return statement.executeQuery();
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet != null && resultSet.next()) {
+                    isExists = (resultSet.getInt(1) > 0);
+                }
+            }
         } catch (SQLException exception) {
             System.err.println("错误：SQL语句异常！");
             exception.printStackTrace();
-            return null;
         }
+        disconnect();
+        return isExists;
     }
 
     /**
@@ -671,9 +717,8 @@ public class Connector implements Serializable {
             details = (username + repoName + path + fileName).getBytes();
         }
         try {
-            PreparedStatement statement = Objects.requireNonNull(getConnection()).prepareStatement(
-                "INSERT INTO Repositories VALUES (?, ?, ?, ?, ?, ?, ?)"
-            );
+            PreparedStatement statement = Objects.requireNonNull(connect()).prepareStatement(
+                "INSERT INTO Repositories VALUES (?, ?, ?, ?, ?, ?, ?)");
             statement.setString(1, username);
             statement.setString(2, repoName);
             statement.setString(3, path);
@@ -686,5 +731,6 @@ public class Connector implements Serializable {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        disconnect();
     }
 }

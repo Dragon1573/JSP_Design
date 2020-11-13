@@ -9,8 +9,13 @@
     <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" />
     <title>新用户注册</title>
     <script type="text/javascript" src="bootstrap/jquery.min.js"></script>
+    <script type="text/javascript" src="bootstrap/md5.min.js"></script>
     <script type="text/javascript" src="js/platform.js"></script>
-    <script type="text/javascript" src="js/encrypt.js"></script>
+    <script type="text/javascript">
+      /* @formatter:off */
+      function e() {let d = $('form'), i = d.find('#password'), n = d.find('#confirm'), o = b64_hmac_md5(i, i);i.value = o, void 0 !== n && (n.value = o), d.submit()}
+      /* @formatter:on */
+    </script>
   </head>
   <body>
     <div class="signUpFrame">
@@ -38,10 +43,10 @@
           <label for="answer">密保答案（可选）</label>
           <input type="text" name="answer" id="answer" pattern=".{1,50}" placeholder="小于50字符长度" />
         </div>
-        <button type="submit" onclick="encryptPassword()">注册</button>
-        <c:if test="${error eq 'SignUpFailedError'}">
-          <p class="error">注册失败，请稍后重试……</p>
-        </c:if>
+        <button type="submit" onclick="e();">注册</button>
+        <%--@elvariable id="error" type="java.lang.String"--%> <c:if test="${error eq 'SignUpFailedError'}">
+        <p class="error">注册失败，请稍后重试……</p>
+      </c:if>
       </form>
     </div>
   </body>
